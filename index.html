@@ -11,7 +11,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
         
         body {
-            background: #0a0a0a;
+            background: #000000;
             font-family: 'Orbitron', monospace;
             font-size: 18px;
             background-image: 
@@ -337,6 +337,83 @@
             margin-bottom: 5px;
             font-size: 0.9em;
         }
+        
+        /* Enhanced trading theme colors */
+        .trading-green {
+            color: #00ff00;
+            background-color: rgba(0, 255, 0, 0.1);
+            border-color: #00ff00;
+        }
+        
+        .trading-red {
+            color: #ff0000;
+            background-color: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+        }
+        
+        .trading-black {
+            color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-color: #333333;
+        }
+        
+        /* Improved mobile responsiveness for signals */
+        .signals-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .signal-card {
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        @media (min-width: 768px) {
+            .signals-container {
+                flex-direction: row;
+                gap: 15px;
+            }
+        }
+        
+        /* Info modal styles */
+        .info-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+        
+        .info-modal-content {
+            background: linear-gradient(135deg, #111 0%, #222 100%);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            margin: 5% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: #ffd700;
+        }
     </style>
 </head>
 <body class="text-white trading-bg">
@@ -357,8 +434,8 @@
                 <canvas id="tradingChart"></canvas>
             </div>
             
-            <div class="flex justify-between mt-4">
-                <div>
+            <div class="flex flex-col md:flex-row justify-between mt-4">
+                <div class="mb-2 md:mb-0">
                     <span class="indicator indicator-bullish">RSI: <span id="rsiValue">--</span></span>
                     <span class="indicator indicator-neutral">MA: <span id="maValue">--</span></span>
                     <span class="indicator indicator-bearish">MACD: <span id="macdValue">--</span></span>
@@ -569,10 +646,10 @@
                 </div>
             </div>
 
-            <!-- Next 5 Rounds Prediction -->
+            <!-- Next 5 Rounds Prediction - Improved for mobile -->
             <div class="trading-border p-4">
                 <h3 class="text-xl font-bold mb-3 bullish text-center large-text">NEXT 5 SIGNALS</h3>
-                <div class="grid grid-cols-5 gap-4" id="nextRoundsPrediction">
+                <div class="signals-container" id="nextRoundsPrediction">
                     <!-- Will be filled dynamically -->
                 </div>
             </div>
@@ -589,9 +666,12 @@
         <!-- FOOTER -->
         <div class="text-center mt-8">
             <div class="trading-border p-4">
-                <div class="bullish text-sm large-text">
+                <div class="bullish text-sm large-text mb-3">
                     🔥 AVIATOR TRADING PREDICTOR - REAL-TIME SIGNALS
                 </div>
+                <button onclick="showInfoModal()" class="bg-blue-900/50 border-2 border-blue-500 p-2 rounded text-blue-300 hover:text-white btn-large">
+                    ℹ️ HOW TO USE THIS PLATFORM
+                </button>
             </div>
         </div>
     </div>
@@ -612,6 +692,58 @@
         <h3 class="text-2xl font-bold mb-4 neutral">TRADING SIGNAL</h3>
         <div class="text-5xl font-black mb-4" id="popupPrediction">ANALYZING...</div>
         <div class="text-lg bullish" id="popupConfidence">Calculating...</div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="info-modal">
+        <div class="info-modal-content">
+            <span class="close-modal" onclick="closeInfoModal()">&times;</span>
+            <h2 class="text-3xl font-bold mb-4 text-center neutral">About Aviator Trading Predictor</h2>
+            
+            <div class="mb-6">
+                <h3 class="text-xl font-bold mb-2 bullish">What is this platform?</h3>
+                <p class="mb-4">The Aviator Trading Predictor is an advanced analytical tool designed to help you make more informed decisions when playing the Aviator game. It combines real-time market analysis with your personal trading history to generate trading signals and predictions.</p>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-xl font-bold mb-2 bullish">How to use this platform:</h3>
+                <ol class="list-decimal pl-6 space-y-2">
+                    <li><strong>Enter Your Trading Data:</strong> In the "Your Trading Data" section, input your past Aviator multipliers (comma separated). This helps the system analyze your personal trading patterns.</li>
+                    <li><strong>Analyze Your Pattern:</strong> Click the "ANALYZE YOUR PATTERN" button to process your data and generate statistics about your trading history.</li>
+                    <li><strong>Generate Trading Signals:</strong> Click "GENERATE NEXT SIGNAL" to get predictions for the next round based on both market analysis and your personal pattern.</li>
+                    <li><strong>Review Trading Signals:</strong> The platform will show you BUY, SELL, or HOLD signals with confidence levels based on multiple analytical factors.</li>
+                    <li><strong>Execute Trades:</strong> Use the trading panel buttons to simulate executing trades based on the signals provided.</li>
+                </ol>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-xl font-bold mb-2 bullish">Understanding the Signals:</h3>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><span class="bullish">BUY Signal:</span> Indicates a higher probability of the multiplier reaching 2x or more. Consider entering a position.</li>
+                    <li><span class="bearish">SELL Signal:</span> Suggests the multiplier is likely to crash below 2x. Consider exiting or avoiding entry.</li>
+                    <li><span class="signal">HOLD Signal:</span> Indicates uncertainty in the market. Wait for a clearer signal before taking action.</li>
+                </ul>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-xl font-bold mb-2 bullish">Understanding the Color Scheme:</h3>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><span class="bullish">Green:</span> Bullish indicators, positive signals, and profitable outcomes</li>
+                    <li><span class="bearish">Red:</span> Bearish indicators, negative signals, and potential losses</li>
+                    <li><span class="neutral">Gold/Yellow:</span> Neutral signals, important information, and warnings</li>
+                    <li><span class="signal">Cyan:</span> System messages and general information</li>
+                </ul>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-xl font-bold mb-2 bullish">Important Disclaimer:</h3>
+                <p>This tool is for analytical and educational purposes only. While it uses advanced algorithms to predict outcomes, gambling always carries risk. Never bet more than you can afford to lose, and remember that past performance does not guarantee future results. Use this tool as part of a broader strategy and always gamble responsibly.</p>
+            </div>
+            
+            <div class="text-center">
+                <button onclick="closeInfoModal()" class="buy-button">GOT IT!</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1332,25 +1464,32 @@
             
             predictions.forEach((pred, index) => {
                 const div = document.createElement('div');
-                div.className = `text-center p-3 rounded border ${
-                    pred.final.action === "BUY" ? 
-                    'border-green-500 bg-green-900/20' : 
-                    pred.final.action === "SELL" ?
-                    'border-red-500 bg-red-900/20' :
-                    'border-blue-500 bg-blue-900/20'
-                }`;
+                let cardClass = 'signal-card ';
+                
+                if (pred.final.action === "BUY") {
+                    cardClass += 'trading-green';
+                } else if (pred.final.action === "SELL") {
+                    cardClass += 'trading-red';
+                } else {
+                    cardClass += 'trading-black';
+                }
+                
+                div.className = cardClass;
                 div.innerHTML = `
-                    <div class="font-bold text-lg">R${index + 1}</div>
-                    <div class="text-xl font-black ${
-                        pred.final.action === "BUY" ? 'text-green-400' : 
-                        pred.final.action === "SELL" ? 'text-red-400' : 'text-blue-400'
-                    }">
-                        ${pred.final.action}
+                    <div>
+                        <div class="font-bold text-lg">Round ${index + 1}</div>
+                        <div class="text-xs text-gray-400">
+                            Market: ${pred.crypto.action} | Strategy: ${pred.strategy.action}
+                        </div>
                     </div>
-                    <div class="text-xs">${pred.final.confidence}% conf</div>
-                    <div class="text-xs text-gray-400 mt-1">
-                        Market: ${pred.crypto.action}<br>
-                        Strategy: ${pred.strategy.action}
+                    <div class="text-right">
+                        <div class="text-xl font-black ${
+                            pred.final.action === "BUY" ? 'bullish' : 
+                            pred.final.action === "SELL" ? 'bearish' : 'neutral'
+                        }">
+                            ${pred.final.action}
+                        </div>
+                        <div class="text-xs">${pred.final.confidence}% conf</div>
                     </div>
                 `;
                 container.appendChild(div);
@@ -1580,6 +1719,23 @@
             setTimeout(() => {
                 popup.classList.remove('show');
             }, 2000);
+        }
+
+        // Info modal functions
+        function showInfoModal() {
+            document.getElementById('infoModal').style.display = 'block';
+        }
+
+        function closeInfoModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
         }
 
         // Initialize on load
