@@ -3,7 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVIATOR TRADING PREDICTOR</title>
+    <title>AVIATOR TRADING PREDICTOR - Real-Time Trading Signals & Analysis</title>
+    <meta name="description" content="Advanced Aviator game predictor with real-time trading signals, technical analysis, and strategy recommendations. Make informed decisions with our AI-powered prediction engine.">
+    <meta name="keywords" content="aviator predictor, trading signals, aviator game, crash game predictor, betting strategy, technical analysis">
+    <meta name="author" content="Aviator Trading Predictor">
+    <meta property="og:title" content="AVIATOR TRADING PREDICTOR - Real-Time Trading Signals">
+    <meta property="og:description" content="Advanced Aviator game predictor with real-time trading signals and technical analysis. Make informed decisions with our AI-powered prediction engine.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AVIATOR TRADING PREDICTOR - Real-Time Trading Signals">
+    <meta name="twitter:description" content="Advanced Aviator game predictor with real-time trading signals and technical analysis.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -176,7 +191,7 @@
         
         .prediction-popup.show {
             display: block;
-            animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+            animation: fadeIn 0.5s, fadeOut 0.5s 3.5s;
         }
         
         @keyframes fadeIn {
@@ -414,6 +429,24 @@
         .close-modal:hover {
             color: #ffd700;
         }
+        
+        /* Responsive heading sizes */
+        .responsive-title {
+            font-size: clamp(1.5rem, 5vw, 3.75rem); /* 24px to 60px */
+            line-height: 1.2;
+        }
+        
+        /* Aviator image styling */
+        .aviator-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            margin: 0 auto;
+            display: block;
+        }
     </style>
 </head>
 <body class="text-white trading-bg">
@@ -421,8 +454,9 @@
     
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         <!-- HEADER -->
-        <div class="text-center mb-12">
-            <h1 class="text-6xl font-black mb-4 bullish">AVIATOR TRADING PREDICTOR</h1>
+        <div class="text-center mb-8">
+            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Aviator Trading" class="aviator-image mb-4">
+            <h1 class="responsive-title font-black mb-4 bullish">AVIATOR TRADING PREDICTOR</h1>
             <div class="text-xl signal">REAL-TIME TRADING SIGNALS & ANALYSIS</div>
         </div>
 
@@ -1654,10 +1688,10 @@
             // Show popup
             popup.classList.add('show');
             
-            // Hide popup after 2 seconds
+            // Hide popup after 4 seconds
             setTimeout(() => {
                 popup.classList.remove('show');
-            }, 2000);
+            }, 4000);
             
             // Update order book
             updateOrderBook(action);
@@ -1715,10 +1749,10 @@
             // Show popup
             popup.classList.add('show');
             
-            // Hide popup after 2 seconds
+            // Hide popup after 4 seconds
             setTimeout(() => {
                 popup.classList.remove('show');
-            }, 2000);
+            }, 4000);
         }
 
         // Info modal functions
