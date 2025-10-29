@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVIATOR STRATEGY MASTER v4.0 | CRYPTO-PATTERN FUSION</title>
+    <title>AVIATOR STRATEGY MASTER v4.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
     <style>
@@ -12,7 +12,7 @@
         body {
             background: #0a0a0a;
             font-family: 'Orbitron', monospace;
-            font-size: 18px; /* Increased base font size */
+            font-size: 18px;
             background-image: 
                 radial-gradient(circle at 20% 30%, rgba(0, 255, 0, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.05) 0%, transparent 50%);
@@ -65,7 +65,7 @@
             background: #000;
             border: 1px solid #00ff00;
             font-family: monospace;
-            font-size: 1em; /* Increased font size */
+            font-size: 1em;
             word-break: break-all;
         }
         
@@ -156,6 +156,42 @@
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
             border: 2px solid rgba(255, 215, 0, 0.9);
         }
+        
+        /* Prediction popup */
+        .prediction-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+            display: none;
+            text-align: center;
+        }
+        
+        .prediction-popup.show {
+            display: block;
+            animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        /* Hidden section for crypto engine */
+        .hidden-section {
+            display: none;
+        }
     </style>
 </head>
 <body class="text-white crypto-bg">
@@ -165,70 +201,6 @@
         <!-- HEADER -->
         <div class="text-center mb-12">
             <h1 class="text-6xl font-black mb-4 crypto-text">AVIATOR STRATEGY MASTER</h1>
-            <div class="text-2xl cyan-text mb-2">CRYPTO-PATTERN FUSION ENGINE v4.0</div>
-            <div class="text-lg danger-text blink-warning">
-                YOUR STRATEGY + CRYPTO RNG = MAXIMUM PREDICTION POWER
-            </div>
-        </div>
-
-        <!-- STRATEGY CONFIGURATION -->
-        <div class="strategy-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 gold-text text-center">🎯 YOUR STRATEGY CONFIGURATION</h2>
-            
-            <div class="grid md:grid-cols-3 gap-6 mb-6">
-                <!-- Strategy Rules -->
-                <div>
-                    <h3 class="text-xl font-bold mb-3 crypto-text">Strategy Rules</h3>
-                    <div class="space-y-2 text-sm large-text">
-                        <div class="flex items-center">
-                            <input type="checkbox" id="skipAfterLow" checked class="mr-2">
-                            <label for="skipAfterLow">SKIP after <2x multiplier</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" id="stakeAfterHigh" checked class="mr-2">
-                            <label for="stakeAfterHigh">STAKE after 2x+ streak</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" id="highRatio" checked class="mr-2">
-                            <label for="highRatio">STAKE when >60% are 2x+</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Risk Management -->
-                <div>
-                    <h3 class="text-xl font-bold mb-3 crypto-text">Risk Management</h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-sm mb-1 large-text">Bankroll ($)</label>
-                            <input type="number" id="bankroll" value="1000" class="w-full seed-display text-green-400 input-large rounded">
-                        </div>
-                        <div>
-                            <label class="block text-sm mb-1 large-text">Base Bet ($)</label>
-                            <input type="number" id="baseBet" value="10" class="w-full seed-display text-green-400 input-large rounded">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Strategy Performance -->
-                <div>
-                    <h3 class="text-xl font-bold mb-3 crypto-text">Performance</h3>
-                    <div class="space-y-2 large-text">
-                        <div class="flex justify-between">
-                            <span>Strategy Accuracy:</span>
-                            <span class="gold-text" id="strategyAccuracy">0%</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Total Predictions:</span>
-                            <span class="crypto-text" id="totalPredictions">0</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Correct Calls:</span>
-                            <span class="crypto-text" id="correctCalls">0</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- PLAYER DATA INPUT SECTION -->
@@ -245,9 +217,6 @@
                     <div class="text-xs text-gray-400 mt-1 large-text">
                         Enter your ACTUAL game multipliers from Aviator (minimum 10 rounds)
                     </div>
-                    <button onclick="generateRealisticData()" class="w-full mt-2 bg-blue-900/50 border border-blue-500 p-3 rounded crypto-text btn-large">
-                        🎲 GENERATE REALISTIC SAMPLE DATA
-                    </button>
                 </div>
                 
                 <!-- Quick Stats from Player Data -->
@@ -273,53 +242,6 @@
                     <!-- Multipliers will appear here -->
                 </div>
             </div>
-        </div>
-
-        <!-- CRYPTO SEED CONTROL PANEL -->
-        <div class="danger-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 danger-text text-center">🔐 CRYPTO RNG ENGINE</h2>
-            
-            <div class="grid md:grid-cols-3 gap-6 mb-6">
-                <div>
-                    <label class="block text-sm mb-2 crypto-text large-text">Server Seed (Hex):</label>
-                    <input type="text" id="serverSeed" 
-                           class="w-full seed-display text-green-400 input-large rounded">
-                    <button onclick="generateServerSeed()" class="w-full mt-2 bg-green-900/50 border border-green-500 p-3 rounded crypto-text btn-large">
-                        GENERATE SERVER SEED
-                    </button>
-                </div>
-                
-                <div>
-                    <label class="block text-sm mb-2 crypto-text large-text">Client Seed (Your ID):</label>
-                    <input type="text" id="clientSeed" 
-                           class="w-full seed-display text-green-400 input-large rounded">
-                    <button onclick="generateClientSeed()" class="w-full mt-2 bg-green-900/50 border border-green-500 p-3 rounded crypto-text btn-large">
-                        GENERATE CLIENT SEED
-                    </button>
-                </div>
-                
-                <div>
-                    <label class="block text-sm mb-2 crypto-text large-text">Start Nonce (Round):</label>
-                    <input type="number" id="nonce" value="1" 
-                           class="w-full seed-display text-green-400 input-large rounded text-center">
-                    <div class="text-xs text-gray-400 mt-2 text-center large-text">
-                        Next Round: <span id="currentRound">1</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HASH DISPLAY -->
-            <div class="mb-6">
-                <label class="block text-sm mb-2 crypto-text large-text">HMAC-SHA256 Hash:</label>
-                <div id="hashDisplay" class="seed-display p-3 text-green-400 large-text">
-                    Hash will be generated after analysis...
-                </div>
-            </div>
-
-            <button onclick="analyzeWithStrategy()" 
-                    class="w-full bg-red-900/50 border-2 border-red-500 p-4 rounded-lg danger-text text-xl font-bold pulse-crypto btn-large">
-                🚀 APPLY STRATEGY + CRYPTO RNG → PREDICT NEXT
-            </button>
         </div>
 
         <!-- STRATEGY-BASED PREDICTION -->
@@ -420,7 +342,7 @@
         </div>
 
         <!-- TRADING STRATEGY -->
-        <div id="strategySection" class="hidden strategy-border rounded-lg p-6">
+        <div id="strategySection" class="hidden strategy-border rounded-lg p-6 mb-8">
             <h2 class="text-2xl font-bold mb-4 gold-text text-center large-text">🎯 TRADING STRATEGY</h2>
             <div id="strategyRecommendation" class="text-center">
                 <!-- Strategy will be displayed here -->
@@ -431,10 +353,28 @@
         <div class="text-center mt-8">
             <div class="matrix-border p-4">
                 <div class="crypto-text text-sm large-text">
-                    🔥 YOUR STRATEGY + REAL CRYPTO RNG = MAXIMUM PREDICTION POWER
+                    🔥 AVIATOR STRATEGY MASTER - PREDICT WITH CONFIDENCE
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Hidden CRYPTO SEED CONTROL PANEL (still functional but not visible) -->
+    <div class="hidden-section">
+        <div id="serverSeed"></div>
+        <div id="clientSeed"></div>
+        <div id="nonce">1</div>
+        <div id="hashDisplay"></div>
+        <div id="skipAfterLow" checked></div>
+        <div id="stakeAfterHigh" checked></div>
+        <div id="highRatio" checked></div>
+    </div>
+
+    <!-- Prediction Popup -->
+    <div id="predictionPopup" class="prediction-popup">
+        <h3 class="text-2xl font-bold mb-4 gold-text">PREDICTION RESULT</h3>
+        <div class="text-5xl font-black mb-4" id="popupPrediction">ANALYZING...</div>
+        <div class="text-lg crypto-text" id="popupConfidence">Calculating...</div>
     </div>
 
     <script>
@@ -709,7 +649,7 @@
 
             // STRATEGY-BASED PREDICTION ENGINE
             applyStrategy(playerMultipliers, serverSeed, clientSeed, nextNonce, target = 2.0) {
-                // Get strategy settings
+                // Get strategy settings from hidden elements
                 const strategy = {
                     skipAfterLow: document.getElementById('skipAfterLow').checked,
                     stakeAfterHigh: document.getElementById('stakeAfterHigh').checked,
@@ -829,28 +769,33 @@
                 return;
             }
 
-            // Get crypto seeds
-            const serverSeed = document.getElementById('serverSeed').value;
-            const clientSeed = document.getElementById('clientSeed').value;
-            const nonce = parseInt(document.getElementById('nonce').value);
+            // Get crypto seeds from hidden elements
+            const serverSeed = document.getElementById('serverSeed').textContent;
+            const clientSeed = document.getElementById('clientSeed').textContent;
+            const nonce = parseInt(document.getElementById('nonce').textContent);
 
             if (!serverSeed || !clientSeed) {
-                alert('Please generate server and client seeds first!');
-                return;
+                // Generate seeds if they don't exist
+                const newServerSeed = strategyPredictor.generateServerSeed();
+                const newClientSeed = strategyPredictor.generateClientSeed();
+                document.getElementById('serverSeed').textContent = newServerSeed;
+                document.getElementById('clientSeed').textContent = newClientSeed;
+                
+                strategyPredictor.serverSeed = newServerSeed;
+                strategyPredictor.clientSeed = newClientSeed;
+                strategyPredictor.nonce = nonce;
+            } else {
+                strategyPredictor.serverSeed = serverSeed;
+                strategyPredictor.clientSeed = clientSeed;
+                strategyPredictor.nonce = nonce;
             }
 
-            // Store data
-            strategyPredictor.playerMultipliers = playerMultipliers;
-            strategyPredictor.serverSeed = serverSeed;
-            strategyPredictor.clientSeed = clientSeed;
-            strategyPredictor.nonce = nonce;
-
             // Apply strategy
-            const prediction = strategyPredictor.applyStrategy(playerMultipliers, serverSeed, clientSeed, nonce + 1);
-            const futurePredictions = strategyPredictor.predictNextRounds(playerMultipliers, serverSeed, clientSeed, nonce + 1, 5);
+            const prediction = strategyPredictor.applyStrategy(playerMultipliers, strategyPredictor.serverSeed, strategyPredictor.clientSeed, strategyPredictor.nonce + 1);
+            const futurePredictions = strategyPredictor.predictNextRounds(playerMultipliers, strategyPredictor.serverSeed, strategyPredictor.clientSeed, strategyPredictor.nonce + 1, 5);
 
             // Also get the regular prediction
-            const regularPrediction = strategyPredictor.predictNextRound(playerMultipliers, serverSeed, clientSeed, nonce + 1);
+            const regularPrediction = strategyPredictor.predictNextRound(playerMultipliers, strategyPredictor.serverSeed, strategyPredictor.clientSeed, strategyPredictor.nonce + 1);
 
             // Display results
             displayPlayerStats(playerMultipliers);
@@ -914,7 +859,7 @@
             
             multipliers.forEach((multiplier, index) => {
                 const span = document.createElement('span');
-                let className = 'px-3 py-2 rounded text-sm font-bold '; /* Increased padding */
+                let className = 'px-3 py-2 rounded text-sm font-bold ';
                 
                 if (multiplier >= 5.0) {
                     className += 'multiplier-very-high gold-text';
@@ -965,9 +910,6 @@
             document.getElementById('finalConfidence').textContent = 
                 `Combined Confidence: ${prediction.final.confidence}%`;
             document.getElementById('tradingSignal').textContent = prediction.final.signal;
-
-            // Update hash display
-            document.getElementById('hashDisplay').textContent = prediction.crypto.hash;
         }
 
         function displayFuturePredictions(predictions) {
@@ -1059,23 +1001,61 @@
             if (multipliers) {
                 displayPlayerStats(multipliers);
                 document.getElementById('playerMultipliersDisplay').classList.remove('hidden');
+                
+                // Get crypto seeds from hidden elements
+                let serverSeed = document.getElementById('serverSeed').textContent;
+                let clientSeed = document.getElementById('clientSeed').textContent;
+                let nonce = parseInt(document.getElementById('nonce').textContent);
+                
+                // Generate seeds if they don't exist
+                if (!serverSeed || !clientSeed) {
+                    serverSeed = strategyPredictor.generateServerSeed();
+                    clientSeed = strategyPredictor.generateClientSeed();
+                    document.getElementById('serverSeed').textContent = serverSeed;
+                    document.getElementById('clientSeed').textContent = clientSeed;
+                }
+                
+                // Generate a quick prediction for the popup
+                const prediction = strategyPredictor.predictNextRound(multipliers, serverSeed, clientSeed, nonce + 1);
+                showPredictionPopup(prediction);
+                
+                // Also run the full analysis
+                analyzeWithStrategy();
             }
         }
 
-        function generateServerSeed() {
-            const seed = strategyPredictor.generateServerSeed();
-            document.getElementById('serverSeed').value = seed;
-        }
-
-        function generateClientSeed() {
-            const seed = strategyPredictor.generateClientSeed();
-            document.getElementById('clientSeed').value = seed;
+        function showPredictionPopup(prediction) {
+            const popup = document.getElementById('predictionPopup');
+            const popupPrediction = document.getElementById('popupPrediction');
+            const popupConfidence = document.getElementById('popupConfidence');
+            
+            // Set prediction text
+            popupPrediction.textContent = prediction.final.prediction;
+            popupPrediction.className = prediction.final.prediction === ">2x" ? 
+                'text-5xl font-black mb-4 crypto-text' : 
+                'text-5xl font-black mb-4 danger-text';
+            
+            // Set confidence text
+            popupConfidence.textContent = `Confidence: ${prediction.final.confidence}%`;
+            
+            // Show popup
+            popup.classList.add('show');
+            
+            // Hide popup after 2 seconds
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 2000);
         }
 
         // Initialize on load
         window.onload = function() {
-            generateServerSeed();
-            generateClientSeed();
+            // Generate initial seeds
+            const serverSeed = strategyPredictor.generateServerSeed();
+            const clientSeed = strategyPredictor.generateClientSeed();
+            document.getElementById('serverSeed').textContent = serverSeed;
+            document.getElementById('clientSeed').textContent = clientSeed;
+            
+            // Generate sample data
             generateRealisticData();
         };
     </script>
