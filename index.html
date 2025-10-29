@@ -3,7 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVIATOR TRADING PREDICTOR</title>
+    <title>AVIATOR TRADING PREDICTOR - Real-Time Trading Signals & Analysis</title>
+    <meta name="description" content="Advanced Aviator game predictor with real-time trading signals, technical analysis, and strategy recommendations. Make informed decisions with our AI-powered prediction engine.">
+    <meta name="keywords" content="aviator predictor, trading signals, aviator game, crash game predictor, betting strategy, technical analysis">
+    <meta name="author" content="Aviator Trading Predictor">
+    <meta property="og:title" content="AVIATOR TRADING PREDICTOR - Real-Time Trading Signals">
+    <meta property="og:description" content="Advanced Aviator game predictor with real-time trading signals and technical analysis. Make informed decisions with our AI-powered prediction engine.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AVIATOR TRADING PREDICTOR - Real-Time Trading Signals">
+    <meta name="twitter:description" content="Advanced Aviator game predictor with real-time trading signals and technical analysis.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,7 +26,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
         
         body {
-            background: #000;
+            background: #000000;
             font-family: 'Orbitron', monospace;
             font-size: 18px;
             background-image: 
@@ -176,7 +191,7 @@
         
         .prediction-popup.show {
             display: block;
-            animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+            animation: fadeIn 0.5s, fadeOut 0.5s 3.5s;
         }
         
         @keyframes fadeIn {
@@ -194,8 +209,8 @@
             display: none;
         }
         
-        /* Trading buttons */
-        .buy-button {
+        /* Trading buttons - Updated for Aviator context */
+        .bet-button {
             background: linear-gradient(45deg, #00a86b, #00ff00);
             border: 2px solid #00a86b;
             color: white;
@@ -208,13 +223,13 @@
             box-shadow: 0 4px 15px rgba(0, 168, 107, 0.4);
         }
         
-        .buy-button:hover {
+        .bet-button:hover {
             background: linear-gradient(45deg, #00cc7f, #00ff33);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 168, 107, 0.6);
         }
         
-        .sell-button {
+        .cashout-button {
             background: linear-gradient(45deg, #ff0000, #ff4757);
             border: 2px solid #ff0000;
             color: white;
@@ -227,13 +242,13 @@
             box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
         }
         
-        .sell-button:hover {
+        .cashout-button:hover {
             background: linear-gradient(45deg, #ff3333, #ff6b6b);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
         }
         
-        .hold-button {
+        .wait-button {
             background: linear-gradient(45deg, #3498db, #2ecc71);
             border: 2px solid #3498db;
             color: white;
@@ -246,7 +261,7 @@
             box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
         }
         
-        .hold-button:hover {
+        .wait-button:hover {
             background: linear-gradient(45deg, #5dade2, #58d68d);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
@@ -338,82 +353,99 @@
             font-size: 0.9em;
         }
         
-        /* Next 5 Signals - Mobile Responsive */
+        /* Enhanced trading theme colors */
+        .trading-green {
+            color: #00ff00;
+            background-color: rgba(0, 255, 0, 0.1);
+            border-color: #00ff00;
+        }
+        
+        .trading-red {
+            color: #ff0000;
+            background-color: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+        }
+        
+        .trading-black {
+            color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-color: #333333;
+        }
+        
+        /* Improved mobile responsiveness for signals */
         .signals-container {
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-        
-        .signals-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            display: flex;
+            flex-direction: column;
             gap: 10px;
-            min-width: 600px;
         }
         
-        @media (max-width: 768px) {
-            .signals-grid {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 8px;
-                min-width: 500px;
+        .signal-card {
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        @media (min-width: 768px) {
+            .signals-container {
+                flex-direction: row;
+                gap: 15px;
             }
         }
         
-        /* Info Modal */
+        /* Info modal styles */
         .info-modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.8);
             z-index: 2000;
-            display: none;
             overflow-y: auto;
         }
         
-        .info-modal.show {
-            display: block;
-        }
-        
-        .info-content {
-            background: #111;
-            border: 2px solid #00ff00;
+        .info-modal-content {
+            background: linear-gradient(135deg, #111 0%, #222 100%);
+            border: 2px solid #ffd700;
             border-radius: 10px;
+            margin: 5% auto;
+            padding: 20px;
+            width: 90%;
             max-width: 800px;
-            margin: 50px auto;
-            padding: 30px;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
         }
         
         .close-modal {
+            color: #aaa;
             float: right;
-            font-size: 30px;
+            font-size: 28px;
+            font-weight: bold;
             cursor: pointer;
-            color: #ff0000;
         }
         
         .close-modal:hover {
-            color: #ff6666;
+            color: #ffd700;
         }
         
-        /* Footer button */
-        .footer-button {
-            background: linear-gradient(45deg, #3498db, #2ecc71);
-            border: 2px solid #3498db;
-            color: white;
-            font-weight: bold;
-            padding: 10px 20px;
-            font-size: 1em;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+        /* Responsive heading sizes */
+        .responsive-title {
+            font-size: clamp(1.5rem, 5vw, 3.75rem); /* 24px to 60px */
+            line-height: 1.2;
         }
         
-        .footer-button:hover {
-            background: linear-gradient(45deg, #5dade2, #58d68d);
-            transform: translateY(-2px);
+        /* Aviator image styling */
+        .aviator-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            margin: 0 auto;
+            display: block;
         }
     </style>
 </head>
@@ -422,14 +454,15 @@
     
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         <!-- HEADER -->
-        <div class="text-center mb-12">
-            <h1 class="text-6xl font-black mb-4 bullish">AVIATOR TRADING PREDICTOR</h1>
-            <div class="text-xl signal">REAL-TIME TRADING SIGNALS & ANALYSIS</div>
+        <div class="text-center mb-8">
+            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Aviator Trading" class="aviator-image mb-4">
+            <h1 class="responsive-title font-black mb-4 bullish">AVIATOR TRADING PREDICTOR</h1>
+            <div class="text-xl signal">REAL-TIME BETTING SIGNALS & ANALYSIS</div>
         </div>
 
         <!-- TRADING CHART SECTION -->
         <div class="trading-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 bullish text-center">📈 AVIATOR TRADING CHART</h2>
+            <h2 class="text-3xl font-bold mb-4 bullish text-center">📈 AVIATOR MULTIPLIER CHART</h2>
             
             <div class="chart-container">
                 <canvas id="tradingChart"></canvas>
@@ -441,7 +474,7 @@
                     <span class="indicator indicator-neutral">MA: <span id="maValue">--</span></span>
                     <span class="indicator indicator-bearish">MACD: <span id="macdValue">--</span></span>
                 </div>
-                <div class="text-center md:text-right">
+                <div class="text-right">
                     <div class="text-xl bullish">Current: <span id="currentPrice">--</span>x</div>
                     <div class="text-lg bearish">Change: <span id="priceChange">--</span>%</div>
                 </div>
@@ -450,7 +483,7 @@
 
         <!-- PLAYER DATA INPUT SECTION -->
         <div class="trading-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 bullish text-center">🎯 YOUR TRADING DATA</h2>
+            <h2 class="text-3xl font-bold mb-4 bullish text-center">🎯 YOUR BETTING HISTORY</h2>
             
             <div class="grid md:grid-cols-2 gap-6 mb-6">
                 <!-- Your Actual Multipliers -->
@@ -466,7 +499,7 @@
                 
                 <!-- Quick Stats from Player Data -->
                 <div>
-                    <label class="block text-sm mb-2 bullish large-text">Your Trading Statistics:</label>
+                    <label class="block text-sm mb-2 bullish large-text">Your Betting Statistics:</label>
                     <div id="playerStats" class="border border-green-500 p-4 rounded space-y-2 large-text">
                         <div class="text-center text-gray-500">Enter your multipliers to see stats</div>
                     </div>
@@ -479,14 +512,14 @@
                     📊 ANALYZE YOUR PATTERN
                 </button>
                 
-                <button onclick="generateNextMultiplier()" class="buy-button">
+                <button onclick="generateNextMultiplier()" class="bet-button">
                     🚀 GENERATE NEXT SIGNAL
                 </button>
             </div>
 
             <!-- Your Multiplier Visualization -->
             <div id="playerMultipliersDisplay" class="hidden border border-green-500 p-4 rounded mb-4">
-                <h4 class="text-lg font-bold mb-3 bullish text-center large-text">Your Trading History</h4>
+                <h4 class="text-lg font-bold mb-3 bullish text-center large-text">Your Betting History</h4>
                 <div class="flex flex-wrap gap-2 justify-center" id="multiplierVisualization">
                     <!-- Multipliers will appear here -->
                 </div>
@@ -495,14 +528,14 @@
 
         <!-- TRADING SIGNALS -->
         <div id="strategyPrediction" class="hidden strategy-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 neutral text-center">🎯 TRADING SIGNALS</h2>
+            <h2 class="text-3xl font-bold mb-4 neutral text-center">🎯 BETTING SIGNALS</h2>
             
             <div class="text-center mb-6">
                 <div class="text-7xl font-black mb-4 neutral pulse-bullish" id="strategyAction">
                     ANALYZING...
                 </div>
                 <div class="text-xl bullish" id="strategyReason">
-                    Applying trading strategy rules...
+                    Applying betting strategy rules...
                 </div>
                 <div class="prediction-meter w-64 mx-auto mt-3">
                     <div id="strategyConfidenceBar" class="prediction-fill accuracy-high" style="width: 0%"></div>
@@ -513,7 +546,7 @@
 
         <!-- PREDICTION RESULTS -->
         <div id="predictionSection" class="hidden trading-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 bullish text-center">🎯 TRADING PREDICTION RESULTS</h2>
+            <h2 class="text-3xl font-bold mb-4 bullish text-center">🎯 PREDICTION RESULTS</h2>
             
             <div class="grid md:grid-cols-2 gap-6 mb-6">
                 <!-- Crypto Prediction -->
@@ -545,7 +578,7 @@
 
             <!-- FINAL COMBINED PREDICTION -->
             <div class="border-2 border-yellow-500 bg-yellow-900/20 rounded-lg p-6 text-center">
-                <h3 class="text-2xl font-bold mb-3 neutral large-text">FINAL TRADING SIGNAL</h3>
+                <h3 class="text-2xl font-bold mb-3 neutral large-text">FINAL BETTING SIGNAL</h3>
                 <div class="text-6xl font-black mb-4 neutral pulse-bullish" id="finalPrediction">
                     ANALYZING...
                 </div>
@@ -560,34 +593,34 @@
 
         <!-- TRADING PANEL -->
         <div id="tradingPanel" class="hidden trading-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 bullish text-center">💹 TRADING PANEL</h2>
+            <h2 class="text-3xl font-bold mb-4 bullish text-center">💹 BETTING PANEL</h2>
             
             <div class="grid md:grid-cols-3 gap-4 mb-6">
                 <div class="text-center">
-                    <button onclick="executeTrade('BUY')" class="buy-button w-full">
-                        📈 BUY SIGNAL
+                    <button onclick="executeTrade('BET')" class="bet-button w-full">
+                        📈 PLACE BET
                     </button>
-                    <div class="mt-2 text-sm bullish">Enter position on high multiplier</div>
+                    <div class="mt-2 text-sm bullish">Enter the game with confidence</div>
                 </div>
                 
                 <div class="text-center">
-                    <button onclick="executeTrade('HOLD')" class="hold-button w-full">
-                        ⏸️ HOLD POSITION
+                    <button onclick="executeTrade('WAIT')" class="wait-button w-full">
+                        ⏸️ WAIT
                     </button>
                     <div class="mt-2 text-sm signal">Wait for better opportunity</div>
                 </div>
                 
                 <div class="text-center">
-                    <button onclick="executeTrade('SELL')" class="sell-button w-full">
-                        📉 SELL SIGNAL
+                    <button onclick="executeTrade('CASH OUT')" class="cashout-button w-full">
+                        📉 CASH OUT
                     </button>
-                    <div class="mt-2 text-sm bearish">Exit position on low multiplier</div>
+                    <div class="mt-2 text-sm bearish">Secure your winnings now</div>
                 </div>
             </div>
             
             <div class="order-book">
                 <div class="order-book-buys">
-                    <h4 class="text-lg font-bold bullish mb-2">BUY ORDERS</h4>
+                    <h4 class="text-lg font-bold bullish mb-2">BETTING OPPORTUNITIES</h4>
                     <div id="buyOrders">
                         <div class="order-item">
                             <span>2.50x</span>
@@ -605,7 +638,7 @@
                 </div>
                 
                 <div class="order-book-sells">
-                    <h4 class="text-lg font-bold bearish mb-2">SELL ORDERS</h4>
+                    <h4 class="text-lg font-bold bearish mb-2">CASH OUT POINTS</h4>
                     <div id="sellOrders">
                         <div class="order-item">
                             <span>1.80x</span>
@@ -626,7 +659,7 @@
 
         <!-- ADVANCED ANALYSIS -->
         <div id="analysisSection" class="hidden signal-border rounded-lg p-6 mb-8">
-            <h2 class="text-2xl font-bold mb-4 bearish text-center large-text">📊 ADVANCED TRADING ANALYSIS</h2>
+            <h2 class="text-2xl font-bold mb-4 bearish text-center large-text">📊 ADVANCED BETTING ANALYSIS</h2>
             
             <div class="grid md:grid-cols-4 gap-4 mb-6">
                 <div class="trading-border p-3 text-center">
@@ -647,20 +680,18 @@
                 </div>
             </div>
 
-            <!-- Next 5 Rounds Prediction -->
+            <!-- Next 5 Rounds Prediction - Improved for mobile -->
             <div class="trading-border p-4">
                 <h3 class="text-xl font-bold mb-3 bullish text-center large-text">NEXT 5 SIGNALS</h3>
-                <div class="signals-container">
-                    <div class="signals-grid" id="nextRoundsPrediction">
-                        <!-- Will be filled dynamically -->
-                    </div>
+                <div class="signals-container" id="nextRoundsPrediction">
+                    <!-- Will be filled dynamically -->
                 </div>
             </div>
         </div>
 
         <!-- TRADING STRATEGY -->
         <div id="strategySection" class="hidden strategy-border rounded-lg p-6 mb-8">
-            <h2 class="text-2xl font-bold mb-4 neutral text-center large-text">🎯 TRADING STRATEGY</h2>
+            <h2 class="text-2xl font-bold mb-4 neutral text-center large-text">🎯 BETTING STRATEGY</h2>
             <div id="strategyRecommendation" class="text-center">
                 <!-- Strategy will be displayed here -->
             </div>
@@ -669,11 +700,11 @@
         <!-- FOOTER -->
         <div class="text-center mt-8">
             <div class="trading-border p-4">
-                <div class="bullish text-sm large-text">
+                <div class="bullish text-sm large-text mb-3">
                     🔥 AVIATOR TRADING PREDICTOR - REAL-TIME SIGNALS
                 </div>
-                <button onclick="showInfoModal()" class="footer-button">
-                    ℹ️ ABOUT THIS PLATFORM
+                <button onclick="showInfoModal()" class="bg-blue-900/50 border-2 border-blue-500 p-2 rounded text-blue-300 hover:text-white btn-large">
+                    ℹ️ HOW TO USE THIS PLATFORM
                 </button>
             </div>
         </div>
@@ -692,59 +723,59 @@
 
     <!-- Prediction Popup -->
     <div id="predictionPopup" class="prediction-popup">
-        <h3 class="text-2xl font-bold mb-4 neutral">TRADING SIGNAL</h3>
+        <h3 class="text-2xl font-bold mb-4 neutral">BETTING SIGNAL</h3>
         <div class="text-5xl font-black mb-4" id="popupPrediction">ANALYZING...</div>
         <div class="text-lg bullish" id="popupConfidence">Calculating...</div>
     </div>
 
     <!-- Info Modal -->
     <div id="infoModal" class="info-modal">
-        <div class="info-content">
+        <div class="info-modal-content">
             <span class="close-modal" onclick="closeInfoModal()">&times;</span>
-            <h2 class="text-3xl font-bold mb-4 bullish text-center">ABOUT AVIATOR TRADING PREDICTOR</h2>
+            <h2 class="text-3xl font-bold mb-4 text-center neutral">About Aviator Trading Predictor</h2>
             
             <div class="mb-6">
-                <h3 class="text-xl font-bold mb-2 neutral">What is this platform?</h3>
-                <p class="mb-4">
-                    The Aviator Trading Predictor is an advanced analysis tool designed to help you make informed decisions 
-                    when playing the Aviator game. It combines real-time market analysis with technical indicators to provide 
-                    accurate trading signals.
-                </p>
+                <h3 class="text-xl font-bold mb-2 bullish">What is this platform?</h3>
+                <p class="mb-4">The Aviator Trading Predictor is an advanced analytical tool designed to help you make more informed decisions when playing the Aviator game. It combines real-time market analysis with your personal betting history to generate betting signals and predictions.</p>
             </div>
             
             <div class="mb-6">
-                <h3 class="text-xl font-bold mb-2 neutral">How to use it</h3>
+                <h3 class="text-xl font-bold mb-2 bullish">How to use this platform:</h3>
                 <ol class="list-decimal pl-6 space-y-2">
-                    <li>Enter your past game multipliers in the input field (minimum 10 rounds recommended)</li>
-                    <li>Click "ANALYZE YOUR PATTERN" to generate trading signals based on your data</li>
-                    <li>Review the trading chart and technical indicators for market trends</li>
-                    <li>Follow the trading signals (BUY, SELL, or HOLD) in the trading panel</li>
-                    <li>Use the "NEXT 5 SIGNALS" to plan your future trades</li>
+                    <li><strong>Enter Your Betting History:</strong> In the "Your Betting History" section, input your past Aviator multipliers (comma separated). This helps the system analyze your personal betting patterns.</li>
+                    <li><strong>Analyze Your Pattern:</strong> Click the "ANALYZE YOUR PATTERN" button to process your data and generate statistics about your betting history.</li>
+                    <li><strong>Generate Betting Signals:</strong> Click "GENERATE NEXT SIGNAL" to get predictions for the next round based on both market analysis and your personal pattern.</li>
+                    <li><strong>Review Betting Signals:</strong> The platform will show you BET, CASH OUT, or WAIT signals with confidence levels based on multiple analytical factors.</li>
+                    <li><strong>Execute Actions:</strong> Use the betting panel buttons to simulate executing actions based on the signals provided.</li>
                 </ol>
             </div>
             
             <div class="mb-6">
-                <h3 class="text-xl font-bold mb-2 neutral">Understanding the signals</h3>
+                <h3 class="text-xl font-bold mb-2 bullish">Understanding the Signals in Aviator Context:</h3>
                 <ul class="list-disc pl-6 space-y-2">
-                    <li><span class="bullish">BUY</span> - Enter a position when a high multiplier is expected</li>
-                    <li><span class="bearish">SELL</span> - Exit a position when a low multiplier is expected</li>
-                    <li><span class="signal">HOLD</span> - Wait for better trading opportunities</li>
+                    <li><span class="bullish">BET Signal:</span> Indicates a higher probability of the multiplier reaching 2x or more. This means it's a good time to place your bet or enter the game.</li>
+                    <li><span class="bearish">CASH OUT Signal:</span> Suggests the multiplier is likely to crash soon. This means you should cash out your bet now to secure your winnings before the plane crashes.</li>
+                    <li><span class="signal">WAIT Signal:</span> Indicates uncertainty in the current round. Wait for a clearer signal before placing your bet or cashing out.</li>
                 </ul>
             </div>
             
             <div class="mb-6">
-                <h3 class="text-xl font-bold mb-2 neutral">Technical indicators</h3>
+                <h3 class="text-xl font-bold mb-2 bullish">Understanding the Color Scheme:</h3>
                 <ul class="list-disc pl-6 space-y-2">
-                    <li><span class="indicator indicator-bullish">RSI</span> - Relative Strength Index (over 70 = overbought, under 30 = oversold)</li>
-                    <li><span class="indicator indicator-neutral">MA</span> - Moving Average (shows trend direction)</li>
-                    <li><span class="indicator indicator-bearish">MACD</span> - Moving Average Convergence Divergence (momentum indicator)</li>
+                    <li><span class="bullish">Green:</span> Positive signals, good betting opportunities, and profitable outcomes</li>
+                    <li><span class="bearish">Red:</span> Negative signals, warnings to cash out, and potential losses</li>
+                    <li><span class="neutral">Gold/Yellow:</span> Important information, warnings, and neutral signals</li>
+                    <li><span class="signal">Cyan:</span> System messages and general information</li>
                 </ul>
             </div>
             
-            <div class="text-center mt-6">
-                <button onclick="closeInfoModal()" class="buy-button">
-                    GOT IT!
-                </button>
+            <div class="mb-6">
+                <h3 class="text-xl font-bold mb-2 bullish">Important Disclaimer:</h3>
+                <p>This tool is for analytical and educational purposes only. While it uses advanced algorithms to predict outcomes, gambling always carries risk. Never bet more than you can afford to lose, and remember that past performance does not guarantee future results. Use this tool as part of a broader strategy and always gamble responsibly.</p>
+            </div>
+            
+            <div class="text-center">
+                <button onclick="closeInfoModal()" class="bet-button">GOT IT!</button>
             </div>
         </div>
     </div>
@@ -1116,12 +1147,12 @@
             predictNextRound(playerMultipliers, serverSeed, clientSeed, nextNonce, target = 2.0) {
                 // 1. Get crypto prediction
                 const cryptoResult = this.generateCrashPoint(serverSeed, clientSeed, nextNonce);
-                const cryptoPrediction = cryptoResult.multiplier >= target ? "BUY" : "SELL";
+                const cryptoPrediction = cryptoResult.multiplier >= target ? "BET" : "CASH OUT";
                 let cryptoConfidence = 50;
 
                 // 2. Get pattern prediction
                 const patternAnalysis = this.analyzePlayerPattern(playerMultipliers, target);
-                let patternPrediction = "HOLD";
+                let patternPrediction = "WAIT";
                 let patternConfidence = 50;
                 let patternReason = "Insufficient data";
 
@@ -1130,23 +1161,23 @@
                     
                     // Smart pattern-based prediction
                     if (patternAnalysis.currentStreak.type === "HIGH" && patternAnalysis.currentStreak.length >= 2) {
-                        patternPrediction = "SELL";
+                        patternPrediction = "CASH OUT";
                         patternConfidence = 65;
                         patternReason = "Regression likely after high streak";
                     } else if (patternAnalysis.currentStreak.type === "LOW" && patternAnalysis.currentStreak.length >= 2) {
-                        patternPrediction = "BUY";
+                        patternPrediction = "BET";
                         patternConfidence = 60;
                         patternReason = "Recovery expected after low streak";
                     } else if (patternAnalysis.hitRate > 60) {
-                        patternPrediction = "BUY";
+                        patternPrediction = "BET";
                         patternConfidence = 55;
                         patternReason = "High historical hit rate";
                     } else if (patternAnalysis.hitRate < 40) {
-                        patternPrediction = "SELL";
+                        patternPrediction = "CASH OUT";
                         patternConfidence = 55;
                         patternReason = "Low historical hit rate";
                     } else {
-                        patternPrediction = lastMultiplier >= target ? "SELL" : "BUY";
+                        patternPrediction = lastMultiplier >= target ? "CASH OUT" : "BET";
                         patternConfidence = 50;
                         patternReason = "Balanced pattern - alternating expected";
                     }
@@ -1205,7 +1236,7 @@
                 const patternAnalysis = this.analyzePlayerPattern(playerMultipliers, target);
                 
                 // Initialize strategy decision
-                let strategyAction = "HOLD";
+                let strategyAction = "WAIT";
                 let strategyReason = "Analyzing strategy...";
                 let strategyConfidence = 50;
                 
@@ -1216,33 +1247,33 @@
                     
                     // STRATEGY RULE 1: Skip after low multiplier
                     if (strategy.skipAfterLow && lastMultiplier < target) {
-                        strategyAction = "HOLD";
-                        strategyReason = `Last multiplier was ${lastMultiplier.toFixed(2)}x (<2x) - holding position as per strategy`;
+                        strategyAction = "WAIT";
+                        strategyReason = `Last multiplier was ${lastMultiplier.toFixed(2)}x (<2x) - waiting as per strategy`;
                         strategyConfidence = 85;
                     }
                     // STRATEGY RULE 2: Stake after high streak
                     else if (strategy.stakeAfterHigh && currentStreak.type === "HIGH" && currentStreak.length >= 2) {
-                        strategyAction = "BUY";
-                        strategyReason = `Current streak of ${currentStreak.length} consecutive 2x+ multipliers - buying as per strategy`;
+                        strategyAction = "BET";
+                        strategyReason = `Current streak of ${currentStreak.length} consecutive 2x+ multipliers - betting as per strategy`;
                         strategyConfidence = 75;
                     }
                     // STRATEGY RULE 3: Stake when high ratio
                     else if (strategy.highRatio && hitRate >= 60) {
-                        strategyAction = "BUY";
-                        strategyReason = `High hit rate (${hitRate.toFixed(1)}%) of 2x+ multipliers - buying as per strategy`;
+                        strategyAction = "BET";
+                        strategyReason = `High hit rate (${hitRate.toFixed(1)}%) of 2x+ multipliers - betting as per strategy`;
                         strategyConfidence = 70;
                     }
                     // DEFAULT STRATEGY: Wait if uncertain
                     else {
-                        strategyAction = "HOLD";
-                        strategyReason = "Uncertain conditions - holding as per default strategy";
+                        strategyAction = "WAIT";
+                        strategyReason = "Uncertain conditions - waiting as per default strategy";
                         strategyConfidence = 60;
                     }
                 }
                 
                 // Get crypto prediction
                 const cryptoResult = this.generateCrashPoint(serverSeed, clientSeed, nextNonce);
-                const cryptoPrediction = cryptoResult.multiplier >= target ? "BUY" : "SELL";
+                const cryptoPrediction = cryptoResult.multiplier >= target ? "BET" : "CASH OUT";
                 let cryptoConfidence = 50;
                 
                 // Combine strategy and crypto predictions
@@ -1293,7 +1324,7 @@
                     const prediction = this.applyStrategy(currentMultipliers, serverSeed, clientSeed, startNonce + i, target);
                     predictions.push(prediction);
                     // Simulate adding the predicted result for next prediction
-                    const simulatedMultiplier = prediction.final.action === "BUY" ? 
+                    const simulatedMultiplier = prediction.final.action === "BET" ? 
                         (2 + Math.random() * 3) : (1 + Math.random());
                     currentMultipliers.push(parseFloat(simulatedMultiplier.toFixed(2)));
                 }
@@ -1467,25 +1498,32 @@
             
             predictions.forEach((pred, index) => {
                 const div = document.createElement('div');
-                div.className = `text-center p-3 rounded border ${
-                    pred.final.action === "BUY" ? 
-                    'border-green-500 bg-green-900/20' : 
-                    pred.final.action === "SELL" ?
-                    'border-red-500 bg-red-900/20' :
-                    'border-blue-500 bg-blue-900/20'
-                }`;
+                let cardClass = 'signal-card ';
+                
+                if (pred.final.action === "BET") {
+                    cardClass += 'trading-green';
+                } else if (pred.final.action === "CASH OUT") {
+                    cardClass += 'trading-red';
+                } else {
+                    cardClass += 'trading-black';
+                }
+                
+                div.className = cardClass;
                 div.innerHTML = `
-                    <div class="font-bold text-lg">R${index + 1}</div>
-                    <div class="text-xl font-black ${
-                        pred.final.action === "BUY" ? 'text-green-400' : 
-                        pred.final.action === "SELL" ? 'text-red-400' : 'text-blue-400'
-                    }">
-                        ${pred.final.action}
+                    <div>
+                        <div class="font-bold text-lg">Round ${index + 1}</div>
+                        <div class="text-xs text-gray-400">
+                            Market: ${pred.crypto.action} | Strategy: ${pred.strategy.action}
+                        </div>
                     </div>
-                    <div class="text-xs">${pred.final.confidence}% conf</div>
-                    <div class="text-xs text-gray-400 mt-1">
-                        Market: ${pred.crypto.action}<br>
-                        Strategy: ${pred.strategy.action}
+                    <div class="text-right">
+                        <div class="text-xl font-black ${
+                            pred.final.action === "BET" ? 'bullish' : 
+                            pred.final.action === "CASH OUT" ? 'bearish' : 'neutral'
+                        }">
+                            ${pred.final.action}
+                        </div>
+                        <div class="text-xs">${pred.final.confidence}% conf</div>
                     </div>
                 `;
                 container.appendChild(div);
@@ -1501,24 +1539,24 @@
             let riskLevel = '';
             
             if (prediction.final.confidence >= 80) {
-                strategy = 'AGGRESSIVE TRADING';
-                recommendation = prediction.final.action === "BUY" ? 
-                    'BUY MAXIMUM POSITION - HIGH CONFIDENCE' : 
-                    prediction.final.action === "SELL" ?
-                    'SELL MAXIMUM POSITION - HIGH CONFIDENCE' :
-                    'HOLD POSITION - HIGH CONFIDENCE';
+                strategy = 'AGGRESSIVE BETTING';
+                recommendation = prediction.final.action === "BET" ? 
+                    'BET MAXIMUM - HIGH CONFIDENCE' : 
+                    prediction.final.action === "CASH OUT" ?
+                    'CASH OUT NOW - HIGH CONFIDENCE' :
+                    'WAIT - HIGH CONFIDENCE';
                 riskLevel = 'LOW RISK';
             } else if (prediction.final.confidence >= 60) {
-                strategy = 'MODERATE TRADING';
-                recommendation = prediction.final.action === "BUY" ? 
-                    'BUY NORMAL POSITION - GOOD CHANCE' : 
-                    prediction.final.action === "SELL" ?
-                    'SELL NORMAL POSITION - GOOD CHANCE' :
-                    'HOLD POSITION - MODERATE CONFIDENCE';
+                strategy = 'MODERATE BETTING';
+                recommendation = prediction.final.action === "BET" ? 
+                    'PLACE NORMAL BET - GOOD CHANCE' : 
+                    prediction.final.action === "CASH OUT" ?
+                    'CASH OUT NOW - GOOD CHANCE' :
+                    'WAIT - MODERATE CONFIDENCE';
                 riskLevel = 'MEDIUM RISK';
             } else {
-                strategy = 'CAUTIOUS TRADING';
-                recommendation = 'HOLD POSITION - LOW CONFIDENCE';
+                strategy = 'CAUTIOUS BETTING';
+                recommendation = 'WAIT - LOW CONFIDENCE';
                 riskLevel = 'HIGH RISK';
             }
 
@@ -1638,22 +1676,22 @@
             
             // Set prediction text
             popupPrediction.textContent = action;
-            popupPrediction.className = action === "BUY" ? 
+            popupPrediction.className = action === "BET" ? 
                 'text-5xl font-black mb-4 bullish' : 
-                action === "SELL" ?
+                action === "CASH OUT" ?
                 'text-5xl font-black mb-4 bearish' :
                 'text-5xl font-black mb-4 signal';
             
             // Set confidence text
-            popupConfidence.textContent = `Trade executed: ${action} position`;
+            popupConfidence.textContent = `Action executed: ${action}`;
             
             // Show popup
             popup.classList.add('show');
             
-            // Hide popup after 2 seconds
+            // Hide popup after 4 seconds
             setTimeout(() => {
                 popup.classList.remove('show');
-            }, 2000);
+            }, 4000);
             
             // Update order book
             updateOrderBook(action);
@@ -1663,8 +1701,8 @@
             const buyOrders = document.getElementById('buyOrders');
             const sellOrders = document.getElementById('sellOrders');
             
-            if (action === "BUY") {
-                // Add a new buy order
+            if (action === "BET") {
+                // Add a new bet opportunity
                 const newOrder = document.createElement('div');
                 newOrder.className = 'order-item';
                 const price = (2.0 + Math.random() * 2).toFixed(2);
@@ -1676,8 +1714,8 @@
                 if (buyOrders.children.length > 3) {
                     buyOrders.removeChild(buyOrders.lastChild);
                 }
-            } else if (action === "SELL") {
-                // Add a new sell order
+            } else if (action === "CASH OUT") {
+                // Add a new cash out point
                 const newOrder = document.createElement('div');
                 newOrder.className = 'order-item';
                 const price = (1.0 + Math.random()).toFixed(2);
@@ -1699,9 +1737,9 @@
             
             // Set prediction text
             popupPrediction.textContent = prediction.final.prediction;
-            popupPrediction.className = prediction.final.prediction === "BUY" ? 
+            popupPrediction.className = prediction.final.prediction === "BET" ? 
                 'text-5xl font-black mb-4 bullish' : 
-                prediction.final.prediction === "SELL" ?
+                prediction.final.prediction === "CASH OUT" ?
                 'text-5xl font-black mb-4 bearish' :
                 'text-5xl font-black mb-4 signal';
             
@@ -1711,18 +1749,27 @@
             // Show popup
             popup.classList.add('show');
             
-            // Hide popup after 2 seconds
+            // Hide popup after 4 seconds
             setTimeout(() => {
                 popup.classList.remove('show');
-            }, 2000);
+            }, 4000);
         }
 
+        // Info modal functions
         function showInfoModal() {
-            document.getElementById('infoModal').classList.add('show');
+            document.getElementById('infoModal').style.display = 'block';
         }
 
         function closeInfoModal() {
-            document.getElementById('infoModal').classList.remove('show');
+            document.getElementById('infoModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
         }
 
         // Initialize on load
