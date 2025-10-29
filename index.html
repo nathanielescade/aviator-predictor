@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVIATOR STRATEGY MASTER v4.0</title>
+    <title>AVIATOR TRADING PREDICTOR</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
         
@@ -18,13 +19,13 @@
                 radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.05) 0%, transparent 50%);
         }
         
-        .crypto-bg {
+        .trading-bg {
             background: 
                 linear-gradient(45deg, #000 0%, #111 100%),
                 repeating-linear-gradient(0deg, transparent, transparent 1px, #000 1px, #000 2px);
         }
         
-        .matrix-border {
+        .trading-border {
             border: 1px solid #00ff00;
             box-shadow: 
                 0 0 15px rgba(0, 255, 0, 0.3),
@@ -32,7 +33,7 @@
             background: rgba(0, 0, 0, 0.8);
         }
         
-        .danger-border {
+        .signal-border {
             border: 1px solid #ff0000;
             box-shadow: 
                 0 0 15px rgba(255, 0, 0, 0.3),
@@ -48,14 +49,14 @@
             background: rgba(0, 0, 0, 0.8);
         }
         
-        .crypto-text { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
-        .danger-text { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
-        .gold-text { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
-        .cyan-text { color: #00ffff; text-shadow: 0 0 10px #00ffff; }
+        .bullish { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+        .bearish { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+        .neutral { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
+        .signal { color: #00ffff; text-shadow: 0 0 10px #00ffff; }
         
-        .pulse-crypto { animation: pulse-crypto 2s infinite; }
+        .pulse-bullish { animation: pulse-bullish 2s infinite; }
         
-        @keyframes pulse-crypto {
+        @keyframes pulse-bullish {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.02); opacity: 0.8; }
             100% { transform: scale(1); opacity: 1; }
@@ -192,25 +193,191 @@
         .hidden-section {
             display: none;
         }
+        
+        /* Trading buttons */
+        .buy-button {
+            background: linear-gradient(45deg, #00a86b, #00ff00);
+            border: 2px solid #00a86b;
+            color: white;
+            font-weight: bold;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 168, 107, 0.4);
+        }
+        
+        .buy-button:hover {
+            background: linear-gradient(45deg, #00cc7f, #00ff33);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 168, 107, 0.6);
+        }
+        
+        .sell-button {
+            background: linear-gradient(45deg, #ff0000, #ff4757);
+            border: 2px solid #ff0000;
+            color: white;
+            font-weight: bold;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+        }
+        
+        .sell-button:hover {
+            background: linear-gradient(45deg, #ff3333, #ff6b6b);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
+        }
+        
+        .hold-button {
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            border: 2px solid #3498db;
+            color: white;
+            font-weight: bold;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .hold-button:hover {
+            background: linear-gradient(45deg, #5dade2, #58d68d);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+        }
+        
+        /* Trading chart container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        /* Trading indicators */
+        .indicator {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        .indicator-bullish {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+        }
+        
+        .indicator-bearish {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            color: #ff0000;
+        }
+        
+        .indicator-neutral {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+        }
+        
+        /* New multiplier animation */
+        @keyframes newMultiplier {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .new-multiplier {
+            animation: newMultiplier 0.5s ease;
+        }
+        
+        /* Trading panel */
+        .trading-panel {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        /* Order book */
+        .order-book {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .order-book-buys {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .order-book-sells {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
     </style>
 </head>
-<body class="text-white crypto-bg">
+<body class="text-white trading-bg">
     <canvas id="matrixBg" class="matrix-bg"></canvas>
     
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         <!-- HEADER -->
         <div class="text-center mb-12">
-            <h1 class="text-6xl font-black mb-4 crypto-text">AVIATOR STRATEGY MASTER</h1>
+            <h1 class="text-6xl font-black mb-4 bullish">AVIATOR TRADING PREDICTOR</h1>
+            <div class="text-xl signal">REAL-TIME TRADING SIGNALS & ANALYSIS</div>
+        </div>
+
+        <!-- TRADING CHART SECTION -->
+        <div class="trading-border rounded-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-4 bullish text-center">📈 AVIATOR TRADING CHART</h2>
+            
+            <div class="chart-container">
+                <canvas id="tradingChart"></canvas>
+            </div>
+            
+            <div class="flex justify-between mt-4">
+                <div>
+                    <span class="indicator indicator-bullish">RSI: <span id="rsiValue">--</span></span>
+                    <span class="indicator indicator-neutral">MA: <span id="maValue">--</span></span>
+                    <span class="indicator indicator-bearish">MACD: <span id="macdValue">--</span></span>
+                </div>
+                <div class="text-right">
+                    <div class="text-xl bullish">Current: <span id="currentPrice">--</span>x</div>
+                    <div class="text-lg bearish">Change: <span id="priceChange">--</span>%</div>
+                </div>
+            </div>
         </div>
 
         <!-- PLAYER DATA INPUT SECTION -->
-        <div class="matrix-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 crypto-text text-center">🎯 YOUR REAL GAME DATA</h2>
+        <div class="trading-border rounded-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-4 bullish text-center">🎯 YOUR TRADING DATA</h2>
             
             <div class="grid md:grid-cols-2 gap-6 mb-6">
                 <!-- Your Actual Multipliers -->
                 <div>
-                    <label class="block text-sm mb-2 crypto-text large-text">Your Past Multipliers (comma separated):</label>
+                    <label class="block text-sm mb-2 bullish large-text">Your Past Multipliers (comma separated):</label>
                     <textarea id="playerMultipliers" rows="4" 
                               class="w-full bg-black border-2 border-green-500 text-green-400 p-3 rounded font-bold input-large"
                               placeholder="1.25, 2.50, 1.80, 3.20, 1.10, 4.50, 1.60, 2.80, 1.30, 5.20, 1.90, 2.10, 1.45, 6.80"></textarea>
@@ -221,73 +388,77 @@
                 
                 <!-- Quick Stats from Player Data -->
                 <div>
-                    <label class="block text-sm mb-2 crypto-text large-text">Your Game Statistics:</label>
+                    <label class="block text-sm mb-2 bullish large-text">Your Trading Statistics:</label>
                     <div id="playerStats" class="border border-green-500 p-4 rounded space-y-2 large-text">
                         <div class="text-center text-gray-500">Enter your multipliers to see stats</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Analyze Button - Positioned prominently -->
-            <div class="text-center mt-4 mb-6">
-                <button onclick="analyzePlayerPattern()" class="bg-purple-900/50 border-2 border-purple-500 p-4 rounded crypto-text btn-large spotlight">
+            <!-- Buttons -->
+            <div class="flex flex-col md:flex-row gap-4 justify-center mt-6">
+                <button onclick="analyzePlayerPattern()" class="bg-purple-900/50 border-2 border-purple-500 p-4 rounded bullish btn-large spotlight">
                     📊 ANALYZE YOUR PATTERN
+                </button>
+                
+                <button onclick="generateNextMultiplier()" class="buy-button">
+                    🚀 GENERATE NEXT SIGNAL
                 </button>
             </div>
 
             <!-- Your Multiplier Visualization -->
             <div id="playerMultipliersDisplay" class="hidden border border-green-500 p-4 rounded mb-4">
-                <h4 class="text-lg font-bold mb-3 crypto-text text-center large-text">Your Multiplier History</h4>
+                <h4 class="text-lg font-bold mb-3 bullish text-center large-text">Your Trading History</h4>
                 <div class="flex flex-wrap gap-2 justify-center" id="multiplierVisualization">
                     <!-- Multipliers will appear here -->
                 </div>
             </div>
         </div>
 
-        <!-- STRATEGY-BASED PREDICTION -->
+        <!-- TRADING SIGNALS -->
         <div id="strategyPrediction" class="hidden strategy-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 gold-text text-center">🎯 STRATEGY-BASED PREDICTION</h2>
+            <h2 class="text-3xl font-bold mb-4 neutral text-center">🎯 TRADING SIGNALS</h2>
             
             <div class="text-center mb-6">
-                <div class="text-7xl font-black mb-4 gold-text pulse-crypto" id="strategyAction">
+                <div class="text-7xl font-black mb-4 neutral pulse-bullish" id="strategyAction">
                     ANALYZING...
                 </div>
-                <div class="text-xl crypto-text" id="strategyReason">
-                    Applying your strategy rules...
+                <div class="text-xl bullish" id="strategyReason">
+                    Applying trading strategy rules...
                 </div>
                 <div class="prediction-meter w-64 mx-auto mt-3">
                     <div id="strategyConfidenceBar" class="prediction-fill accuracy-high" style="width: 0%"></div>
                 </div>
-                <div class="text-sm text-gray-400 mt-1 large-text">Strategy Confidence</div>
+                <div class="text-sm text-gray-400 mt-1 large-text">Signal Confidence</div>
             </div>
         </div>
 
         <!-- PREDICTION RESULTS -->
-        <div id="predictionSection" class="hidden matrix-border rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4 crypto-text text-center">🎯 HYBRID PREDICTION RESULTS</h2>
+        <div id="predictionSection" class="hidden trading-border rounded-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-4 bullish text-center">🎯 TRADING PREDICTION RESULTS</h2>
             
             <div class="grid md:grid-cols-2 gap-6 mb-6">
                 <!-- Crypto Prediction -->
-                <div class="danger-border p-4">
-                    <h3 class="text-xl font-bold mb-3 danger-text large-text">CRYPTO RNG PREDICTION</h3>
+                <div class="signal-border p-4">
+                    <h3 class="text-xl font-bold mb-3 bearish large-text">MARKET ANALYSIS</h3>
                     <div class="text-center">
-                        <div class="text-5xl font-black mb-4 danger-text pulse-crypto" id="cryptoPrediction">
+                        <div class="text-5xl font-black mb-4 bearish pulse-bullish" id="cryptoPrediction">
                             ???
                         </div>
-                        <div class="text-lg crypto-text" id="cryptoDetails">
-                            Calculating RNG prediction...
+                        <div class="text-lg bullish" id="cryptoDetails">
+                            Calculating market prediction...
                         </div>
                     </div>
                 </div>
                 
                 <!-- Pattern Prediction -->
-                <div class="matrix-border p-4">
-                    <h3 class="text-xl font-bold mb-3 crypto-text large-text">YOUR PATTERN PREDICTION</h3>
+                <div class="trading-border p-4">
+                    <h3 class="text-xl font-bold mb-3 bullish large-text">TECHNICAL ANALYSIS</h3>
                     <div class="text-center">
-                        <div class="text-5xl font-black mb-4 crypto-text pulse-crypto" id="patternPrediction">
+                        <div class="text-5xl font-black mb-4 bullish pulse-bullish" id="patternPrediction">
                             ???
                         </div>
-                        <div class="text-lg danger-text" id="patternDetails">
+                        <div class="text-lg bearish" id="patternDetails">
                             Analyzing your pattern...
                         </div>
                     </div>
@@ -296,45 +467,111 @@
 
             <!-- FINAL COMBINED PREDICTION -->
             <div class="border-2 border-yellow-500 bg-yellow-900/20 rounded-lg p-6 text-center">
-                <h3 class="text-2xl font-bold mb-3 gold-text large-text">FINAL COMBINED PREDICTION</h3>
-                <div class="text-6xl font-black mb-4 gold-text pulse-crypto" id="finalPrediction">
+                <h3 class="text-2xl font-bold mb-3 neutral large-text">FINAL TRADING SIGNAL</h3>
+                <div class="text-6xl font-black mb-4 neutral pulse-bullish" id="finalPrediction">
                     ANALYZING...
                 </div>
-                <div class="text-xl crypto-text" id="finalConfidence">
-                    Combining crypto RNG with your personal pattern...
+                <div class="text-xl bullish" id="finalConfidence">
+                    Combining market analysis with technical indicators...
                 </div>
-                <div class="text-lg danger-text mt-3 blink-warning" id="tradingSignal">
+                <div class="text-lg bearish mt-3 blink-warning" id="tradingSignal">
                     SIGNAL: CALCULATING...
                 </div>
             </div>
         </div>
 
+        <!-- TRADING PANEL -->
+        <div id="tradingPanel" class="hidden trading-border rounded-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-4 bullish text-center">💹 TRADING PANEL</h2>
+            
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="text-center">
+                    <button onclick="executeTrade('BUY')" class="buy-button w-full">
+                        📈 BUY SIGNAL
+                    </button>
+                    <div class="mt-2 text-sm bullish">Enter position on high multiplier</div>
+                </div>
+                
+                <div class="text-center">
+                    <button onclick="executeTrade('HOLD')" class="hold-button w-full">
+                        ⏸️ HOLD POSITION
+                    </button>
+                    <div class="mt-2 text-sm signal">Wait for better opportunity</div>
+                </div>
+                
+                <div class="text-center">
+                    <button onclick="executeTrade('SELL')" class="sell-button w-full">
+                        📉 SELL SIGNAL
+                    </button>
+                    <div class="mt-2 text-sm bearish">Exit position on low multiplier</div>
+                </div>
+            </div>
+            
+            <div class="order-book">
+                <div class="order-book-buys">
+                    <h4 class="text-lg font-bold bullish mb-2">BUY ORDERS</h4>
+                    <div id="buyOrders">
+                        <div class="order-item">
+                            <span>2.50x</span>
+                            <span>$125.00</span>
+                        </div>
+                        <div class="order-item">
+                            <span>2.20x</span>
+                            <span>$85.00</span>
+                        </div>
+                        <div class="order-item">
+                            <span>2.00x</span>
+                            <span>$210.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-book-sells">
+                    <h4 class="text-lg font-bold bearish mb-2">SELL ORDERS</h4>
+                    <div id="sellOrders">
+                        <div class="order-item">
+                            <span>1.80x</span>
+                            <span>$95.00</span>
+                        </div>
+                        <div class="order-item">
+                            <span>1.50x</span>
+                            <span>$150.00</span>
+                        </div>
+                        <div class="order-item">
+                            <span>1.20x</span>
+                            <span>$75.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ADVANCED ANALYSIS -->
-        <div id="analysisSection" class="hidden danger-border rounded-lg p-6 mb-8">
-            <h2 class="text-2xl font-bold mb-4 danger-text text-center large-text">📊 ADVANCED PATTERN ANALYSIS</h2>
+        <div id="analysisSection" class="hidden signal-border rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4 bearish text-center large-text">📊 ADVANCED TRADING ANALYSIS</h2>
             
             <div class="grid md:grid-cols-4 gap-4 mb-6">
-                <div class="matrix-border p-3 text-center">
-                    <div class="text-sm crypto-text large-text">Your Hit Rate</div>
-                    <div id="playerHitRate" class="text-xl danger-text font-bold">0%</div>
+                <div class="trading-border p-3 text-center">
+                    <div class="text-sm bullish large-text">Win Rate</div>
+                    <div id="playerHitRate" class="text-xl bearish font-bold">0%</div>
                 </div>
-                <div class="matrix-border p-3 text-center">
-                    <div class="text-sm crypto-text large-text">Current Streak</div>
-                    <div id="currentStreak" class="text-xl gold-text font-bold">--</div>
+                <div class="trading-border p-3 text-center">
+                    <div class="text-sm bullish large-text">Current Streak</div>
+                    <div id="currentStreak" class="text-xl neutral font-bold">--</div>
                 </div>
-                <div class="matrix-border p-3 text-center">
-                    <div class="text-sm crypto-text large-text">Pattern Strength</div>
-                    <div id="patternStrength" class="text-xl crypto-text font-bold">WEAK</div>
+                <div class="trading-border p-3 text-center">
+                    <div class="text-sm bullish large-text">Pattern Strength</div>
+                    <div id="patternStrength" class="text-xl bullish font-bold">WEAK</div>
                 </div>
-                <div class="matrix-border p-3 text-center">
-                    <div class="text-sm crypto-text large-text">Volatility</div>
-                    <div id="playerVolatility" class="text-xl danger-text font-bold">0.00</div>
+                <div class="trading-border p-3 text-center">
+                    <div class="text-sm bullish large-text">Volatility</div>
+                    <div id="playerVolatility" class="text-xl bearish font-bold">0.00</div>
                 </div>
             </div>
 
             <!-- Next 5 Rounds Prediction -->
-            <div class="matrix-border p-4">
-                <h3 class="text-xl font-bold mb-3 crypto-text text-center large-text">NEXT 5 ROUNDS PREDICTION</h3>
+            <div class="trading-border p-4">
+                <h3 class="text-xl font-bold mb-3 bullish text-center large-text">NEXT 5 SIGNALS</h3>
                 <div class="grid grid-cols-5 gap-4" id="nextRoundsPrediction">
                     <!-- Will be filled dynamically -->
                 </div>
@@ -343,7 +580,7 @@
 
         <!-- TRADING STRATEGY -->
         <div id="strategySection" class="hidden strategy-border rounded-lg p-6 mb-8">
-            <h2 class="text-2xl font-bold mb-4 gold-text text-center large-text">🎯 TRADING STRATEGY</h2>
+            <h2 class="text-2xl font-bold mb-4 neutral text-center large-text">🎯 TRADING STRATEGY</h2>
             <div id="strategyRecommendation" class="text-center">
                 <!-- Strategy will be displayed here -->
             </div>
@@ -351,9 +588,9 @@
 
         <!-- FOOTER -->
         <div class="text-center mt-8">
-            <div class="matrix-border p-4">
-                <div class="crypto-text text-sm large-text">
-                    🔥 AVIATOR STRATEGY MASTER - PREDICT WITH CONFIDENCE
+            <div class="trading-border p-4">
+                <div class="bullish text-sm large-text">
+                    🔥 AVIATOR TRADING PREDICTOR - REAL-TIME SIGNALS
                 </div>
             </div>
         </div>
@@ -372,9 +609,9 @@
 
     <!-- Prediction Popup -->
     <div id="predictionPopup" class="prediction-popup">
-        <h3 class="text-2xl font-bold mb-4 gold-text">PREDICTION RESULT</h3>
+        <h3 class="text-2xl font-bold mb-4 neutral">TRADING SIGNAL</h3>
         <div class="text-5xl font-black mb-4" id="popupPrediction">ANALYZING...</div>
-        <div class="text-lg crypto-text" id="popupConfidence">Calculating...</div>
+        <div class="text-lg bullish" id="popupConfidence">Calculating...</div>
     </div>
 
     <script>
@@ -416,6 +653,154 @@
         }
         
         setInterval(drawMatrix, 35);
+        
+        // Trading Chart
+        let tradingChart;
+        
+        function initTradingChart() {
+            const ctx = document.getElementById('tradingChart').getContext('2d');
+            tradingChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Multiplier',
+                        data: [],
+                        borderColor: '#00ff00',
+                        backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#00ff00',
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#00ff00'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#00ff00'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateTradingChart(multipliers) {
+            if (!tradingChart) {
+                initTradingChart();
+            }
+            
+            const labels = multipliers.map((_, i) => `R${i + 1}`);
+            tradingChart.data.labels = labels;
+            tradingChart.data.datasets[0].data = multipliers;
+            tradingChart.update();
+            
+            // Update technical indicators
+            updateTechnicalIndicators(multipliers);
+        }
+        
+        function updateTechnicalIndicators(multipliers) {
+            if (multipliers.length < 5) return;
+            
+            // Calculate RSI (Relative Strength Index)
+            const rsi = calculateRSI(multipliers);
+            document.getElementById('rsiValue').textContent = rsi.toFixed(2);
+            
+            // Calculate Moving Average
+            const ma = calculateMA(multipliers, 5);
+            document.getElementById('maValue').textContent = ma.toFixed(2);
+            
+            // Calculate MACD (simplified)
+            const macd = calculateMACD(multipliers);
+            document.getElementById('macdValue').textContent = macd.toFixed(2);
+            
+            // Update current price and change
+            const current = multipliers[multipliers.length - 1];
+            const previous = multipliers[multipliers.length - 2];
+            const change = ((current - previous) / previous * 100);
+            
+            document.getElementById('currentPrice').textContent = current.toFixed(2);
+            document.getElementById('priceChange').textContent = change.toFixed(2) + '%';
+            document.getElementById('priceChange').className = change >= 0 ? 'bullish' : 'bearish';
+        }
+        
+        function calculateRSI(multipliers) {
+            if (multipliers.length < 14) return 50;
+            
+            const gains = [];
+            const losses = [];
+            
+            for (let i = 1; i < 14; i++) {
+                const change = multipliers[multipliers.length - i] - multipliers[multipliers.length - i - 1];
+                if (change > 0) {
+                    gains.push(change);
+                    losses.push(0);
+                } else {
+                    gains.push(0);
+                    losses.push(Math.abs(change));
+                }
+            }
+            
+            const avgGain = gains.reduce((a, b) => a + b, 0) / gains.length;
+            const avgLoss = losses.reduce((a, b) => a + b, 0) / losses.length;
+            
+            if (avgLoss === 0) return 100;
+            
+            const rs = avgGain / avgLoss;
+            const rsi = 100 - (100 / (1 + rs));
+            
+            return rsi;
+        }
+        
+        function calculateMA(multipliers, period) {
+            if (multipliers.length < period) return multipliers[multipliers.length - 1];
+            
+            const sum = multipliers.slice(-period).reduce((a, b) => a + b, 0);
+            return sum / period;
+        }
+        
+        function calculateMACD(multipliers) {
+            if (multipliers.length < 12) return 0;
+            
+            const ema12 = calculateEMA(multipliers, 12);
+            const ema26 = calculateEMA(multipliers, 26);
+            
+            return ema12 - ema26;
+        }
+        
+        function calculateEMA(multipliers, period) {
+            if (multipliers.length < period) return multipliers[multipliers.length - 1];
+            
+            const multiplier = 2 / (period + 1);
+            let ema = multipliers[multipliers.length - period];
+            
+            for (let i = multipliers.length - period + 1; i < multipliers.length; i++) {
+                ema = (multipliers[i] - ema) * multiplier + ema;
+            }
+            
+            return ema;
+        }
         
         // ADVANCED STRATEGY-BASED PREDICTOR
         class StrategyAviatorPredictor {
@@ -477,6 +862,31 @@
                     hash: hash,
                     randomValue: randomValue
                 };
+            }
+
+            // Generate realistic Aviator multiplier (like real game)
+            generateRealisticMultiplier() {
+                const rand = Math.random();
+                let multiplier;
+                
+                if (rand < 0.4) {
+                    // 40% chance for 1.00-1.99x
+                    multiplier = 1 + Math.random();
+                } else if (rand < 0.7) {
+                    // 30% chance for 2.00-4.99x
+                    multiplier = 2 + Math.random() * 3;
+                } else if (rand < 0.85) {
+                    // 15% chance for 5.00-9.99x
+                    multiplier = 5 + Math.random() * 5;
+                } else if (rand < 0.95) {
+                    // 10% chance for 10.00-24.99x
+                    multiplier = 10 + Math.random() * 15;
+                } else {
+                    // 5% chance for 25.00-100.00x
+                    multiplier = 25 + Math.random() * 75;
+                }
+                
+                return parseFloat(multiplier.toFixed(2));
             }
 
             // Analyze player's pattern
@@ -571,12 +981,12 @@
             predictNextRound(playerMultipliers, serverSeed, clientSeed, nextNonce, target = 2.0) {
                 // 1. Get crypto prediction
                 const cryptoResult = this.generateCrashPoint(serverSeed, clientSeed, nextNonce);
-                const cryptoPrediction = cryptoResult.multiplier >= target ? ">2x" : "<2x";
+                const cryptoPrediction = cryptoResult.multiplier >= target ? "BUY" : "SELL";
                 let cryptoConfidence = 50;
 
                 // 2. Get pattern prediction
                 const patternAnalysis = this.analyzePlayerPattern(playerMultipliers, target);
-                let patternPrediction = "UNCERTAIN";
+                let patternPrediction = "HOLD";
                 let patternConfidence = 50;
                 let patternReason = "Insufficient data";
 
@@ -585,23 +995,23 @@
                     
                     // Smart pattern-based prediction
                     if (patternAnalysis.currentStreak.type === "HIGH" && patternAnalysis.currentStreak.length >= 2) {
-                        patternPrediction = "<2x";
+                        patternPrediction = "SELL";
                         patternConfidence = 65;
                         patternReason = "Regression likely after high streak";
                     } else if (patternAnalysis.currentStreak.type === "LOW" && patternAnalysis.currentStreak.length >= 2) {
-                        patternPrediction = ">2x";
+                        patternPrediction = "BUY";
                         patternConfidence = 60;
                         patternReason = "Recovery expected after low streak";
                     } else if (patternAnalysis.hitRate > 60) {
-                        patternPrediction = ">2x";
+                        patternPrediction = "BUY";
                         patternConfidence = 55;
                         patternReason = "High historical hit rate";
                     } else if (patternAnalysis.hitRate < 40) {
-                        patternPrediction = "<2x";
+                        patternPrediction = "SELL";
                         patternConfidence = 55;
                         patternReason = "Low historical hit rate";
                     } else {
-                        patternPrediction = lastMultiplier >= target ? "<2x" : ">2x";
+                        patternPrediction = lastMultiplier >= target ? "SELL" : "BUY";
                         patternConfidence = 50;
                         patternReason = "Balanced pattern - alternating expected";
                     }
@@ -660,7 +1070,7 @@
                 const patternAnalysis = this.analyzePlayerPattern(playerMultipliers, target);
                 
                 // Initialize strategy decision
-                let strategyAction = "WAIT";
+                let strategyAction = "HOLD";
                 let strategyReason = "Analyzing strategy...";
                 let strategyConfidence = 50;
                 
@@ -671,33 +1081,33 @@
                     
                     // STRATEGY RULE 1: Skip after low multiplier
                     if (strategy.skipAfterLow && lastMultiplier < target) {
-                        strategyAction = "WAIT";
-                        strategyReason = `Last multiplier was ${lastMultiplier.toFixed(2)}x (<2x) - skipping next round as per strategy`;
+                        strategyAction = "HOLD";
+                        strategyReason = `Last multiplier was ${lastMultiplier.toFixed(2)}x (<2x) - holding position as per strategy`;
                         strategyConfidence = 85;
                     }
                     // STRATEGY RULE 2: Stake after high streak
                     else if (strategy.stakeAfterHigh && currentStreak.type === "HIGH" && currentStreak.length >= 2) {
-                        strategyAction = "STAKE";
-                        strategyReason = `Current streak of ${currentStreak.length} consecutive 2x+ multipliers - staking as per strategy`;
+                        strategyAction = "BUY";
+                        strategyReason = `Current streak of ${currentStreak.length} consecutive 2x+ multipliers - buying as per strategy`;
                         strategyConfidence = 75;
                     }
                     // STRATEGY RULE 3: Stake when high ratio
                     else if (strategy.highRatio && hitRate >= 60) {
-                        strategyAction = "STAKE";
-                        strategyReason = `High hit rate (${hitRate.toFixed(1)}%) of 2x+ multipliers - staking as per strategy`;
+                        strategyAction = "BUY";
+                        strategyReason = `High hit rate (${hitRate.toFixed(1)}%) of 2x+ multipliers - buying as per strategy`;
                         strategyConfidence = 70;
                     }
                     // DEFAULT STRATEGY: Wait if uncertain
                     else {
-                        strategyAction = "WAIT";
-                        strategyReason = "Uncertain conditions - waiting as per default strategy";
+                        strategyAction = "HOLD";
+                        strategyReason = "Uncertain conditions - holding as per default strategy";
                         strategyConfidence = 60;
                     }
                 }
                 
                 // Get crypto prediction
                 const cryptoResult = this.generateCrashPoint(serverSeed, clientSeed, nextNonce);
-                const cryptoPrediction = cryptoResult.multiplier >= target ? "STAKE" : "WAIT";
+                const cryptoPrediction = cryptoResult.multiplier >= target ? "BUY" : "SELL";
                 let cryptoConfidence = 50;
                 
                 // Combine strategy and crypto predictions
@@ -708,12 +1118,12 @@
                 if (strategyAction === cryptoPrediction) {
                     // Both agree - high confidence
                     finalAction = strategyAction;
-                    finalReason = `${strategyReason} | Crypto RNG agrees (${cryptoResult.multiplier.toFixed(2)}x expected)`;
+                    finalReason = `${strategyReason} | Market analysis agrees (${cryptoResult.multiplier.toFixed(2)}x expected)`;
                     finalConfidence = Math.max(strategyConfidence, cryptoConfidence) + 15;
                 } else {
                     // Disagreement - trust strategy more
                     finalAction = strategyAction;
-                    finalReason = `${strategyReason} | Crypto RNG disagrees (${cryptoResult.multiplier.toFixed(2)}x expected) - trusting strategy`;
+                    finalReason = `${strategyReason} | Market analysis disagrees (${cryptoResult.multiplier.toFixed(2)}x expected) - trusting strategy`;
                     finalConfidence = strategyConfidence - 10;
                 }
                 
@@ -748,7 +1158,7 @@
                     const prediction = this.applyStrategy(currentMultipliers, serverSeed, clientSeed, startNonce + i, target);
                     predictions.push(prediction);
                     // Simulate adding the predicted result for next prediction
-                    const simulatedMultiplier = prediction.final.action === "STAKE" ? 
+                    const simulatedMultiplier = prediction.final.action === "BUY" ? 
                         (2 + Math.random() * 3) : (1 + Math.random());
                     currentMultipliers.push(parseFloat(simulatedMultiplier.toFixed(2)));
                 }
@@ -768,6 +1178,9 @@
                 alert('Please enter at least 5 of your actual multipliers!');
                 return;
             }
+
+            // Update trading chart
+            updateTradingChart(playerMultipliers);
 
             // Get crypto seeds from hidden elements
             const serverSeed = document.getElementById('serverSeed').textContent;
@@ -809,6 +1222,7 @@
             document.getElementById('predictionSection').classList.remove('hidden');
             document.getElementById('analysisSection').classList.remove('hidden');
             document.getElementById('strategySection').classList.remove('hidden');
+            document.getElementById('tradingPanel').classList.remove('hidden');
             document.getElementById('playerMultipliersDisplay').classList.remove('hidden');
         }
 
@@ -820,23 +1234,23 @@
                 statsDiv.innerHTML = `
                     <div class="flex justify-between">
                         <span>Total Rounds:</span>
-                        <span class="crypto-text">${analysis.totalRounds}</span>
+                        <span class="bullish">${analysis.totalRounds}</span>
                     </div>
                     <div class="flex justify-between">
                         <span>>2x Hits:</span>
-                        <span class="crypto-text">${analysis.highCount}</span>
+                        <span class="bullish">${analysis.highCount}</span>
                     </div>
                     <div class="flex justify-between">
                         <span><2x Hits:</span>
-                        <span class="danger-text">${analysis.lowCount}</span>
+                        <span class="bearish">${analysis.lowCount}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span>Hit Rate:</span>
-                        <span class="gold-text">${analysis.hitRate.toFixed(1)}%</span>
+                        <span>Win Rate:</span>
+                        <span class="neutral">${analysis.hitRate.toFixed(1)}%</span>
                     </div>
                     <div class="flex justify-between">
                         <span>Current Streak:</span>
-                        <span class="${analysis.currentStreak.type === 'HIGH' ? 'crypto-text' : 'danger-text'}">
+                        <span class="${analysis.currentStreak.type === 'HIGH' ? 'bullish' : 'bearish'}">
                             ${analysis.currentStreak.type} (${analysis.currentStreak.length})
                         </span>
                     </div>
@@ -862,11 +1276,11 @@
                 let className = 'px-3 py-2 rounded text-sm font-bold ';
                 
                 if (multiplier >= 5.0) {
-                    className += 'multiplier-very-high gold-text';
+                    className += 'multiplier-very-high neutral';
                 } else if (multiplier >= 2.0) {
-                    className += 'multiplier-high crypto-text';
+                    className += 'multiplier-high bullish';
                 } else {
-                    className += 'multiplier-low danger-text';
+                    className += 'multiplier-low bearish';
                 }
                 
                 span.className = className;
@@ -898,12 +1312,12 @@
             // Crypto Prediction
             document.getElementById('cryptoPrediction').textContent = prediction.crypto.prediction;
             document.getElementById('cryptoDetails').textContent = 
-                `Expected: ${prediction.crypto.expectedMultiplier.toFixed(2)}x | RNG Confidence: ${prediction.crypto.confidence}%`;
+                `Expected: ${prediction.crypto.expectedMultiplier.toFixed(2)}x | Market Confidence: ${prediction.crypto.confidence}%`;
 
             // Pattern Prediction
             document.getElementById('patternPrediction').textContent = prediction.pattern.prediction;
             document.getElementById('patternDetails').textContent = 
-                `${prediction.pattern.reason} | Pattern Confidence: ${prediction.pattern.confidence}%`;
+                `${prediction.pattern.reason} | Technical Confidence: ${prediction.pattern.confidence}%`;
 
             // Final Prediction
             document.getElementById('finalPrediction').textContent = prediction.final.prediction;
@@ -919,18 +1333,23 @@
             predictions.forEach((pred, index) => {
                 const div = document.createElement('div');
                 div.className = `text-center p-3 rounded border ${
-                    pred.final.action === "STAKE" ? 
+                    pred.final.action === "BUY" ? 
                     'border-green-500 bg-green-900/20' : 
-                    'border-red-500 bg-red-900/20'
+                    pred.final.action === "SELL" ?
+                    'border-red-500 bg-red-900/20' :
+                    'border-blue-500 bg-blue-900/20'
                 }`;
                 div.innerHTML = `
                     <div class="font-bold text-lg">R${index + 1}</div>
-                    <div class="text-xl font-black ${pred.final.action === "STAKE" ? 'text-green-400' : 'text-red-400'}">
+                    <div class="text-xl font-black ${
+                        pred.final.action === "BUY" ? 'text-green-400' : 
+                        pred.final.action === "SELL" ? 'text-red-400' : 'text-blue-400'
+                    }">
                         ${pred.final.action}
                     </div>
                     <div class="text-xs">${pred.final.confidence}% conf</div>
                     <div class="text-xs text-gray-400 mt-1">
-                        Crypto: ${pred.crypto.action}<br>
+                        Market: ${pred.crypto.action}<br>
                         Strategy: ${pred.strategy.action}
                     </div>
                 `;
@@ -948,28 +1367,32 @@
             
             if (prediction.final.confidence >= 80) {
                 strategy = 'AGGRESSIVE TRADING';
-                recommendation = prediction.final.action === "STAKE" ? 
-                    'STAKE MAXIMUM AMOUNT - HIGH CONFIDENCE' : 
-                    'AVOID BETTING - HIGH CONFIDENCE';
+                recommendation = prediction.final.action === "BUY" ? 
+                    'BUY MAXIMUM POSITION - HIGH CONFIDENCE' : 
+                    prediction.final.action === "SELL" ?
+                    'SELL MAXIMUM POSITION - HIGH CONFIDENCE' :
+                    'HOLD POSITION - HIGH CONFIDENCE';
                 riskLevel = 'LOW RISK';
             } else if (prediction.final.confidence >= 60) {
                 strategy = 'MODERATE TRADING';
-                recommendation = prediction.final.action === "STAKE" ? 
-                    'STAKE NORMAL AMOUNT - GOOD CHANCE' : 
-                    'STAKE SMALL OR SKIP - LIKELY LOSS';
+                recommendation = prediction.final.action === "BUY" ? 
+                    'BUY NORMAL POSITION - GOOD CHANCE' : 
+                    prediction.final.action === "SELL" ?
+                    'SELL NORMAL POSITION - GOOD CHANCE' :
+                    'HOLD POSITION - MODERATE CONFIDENCE';
                 riskLevel = 'MEDIUM RISK';
             } else {
                 strategy = 'CAUTIOUS TRADING';
-                recommendation = 'STAKE MINIMUM OR WAIT - LOW CONFIDENCE';
+                recommendation = 'HOLD POSITION - LOW CONFIDENCE';
                 riskLevel = 'HIGH RISK';
             }
 
             strategyDiv.innerHTML = `
-                <div class="text-3xl font-bold mb-3 gold-text">${strategy}</div>
-                <div class="text-xl crypto-text mb-2">${recommendation}</div>
-                <div class="text-lg danger-text mb-4">${riskLevel}</div>
+                <div class="text-3xl font-bold mb-3 neutral">${strategy}</div>
+                <div class="text-xl bullish mb-2">${recommendation}</div>
+                <div class="text-lg bearish mb-4">${riskLevel}</div>
                 <div class="text-sm text-gray-400">
-                    Your Hit Rate: ${analysis.hitRate.toFixed(1)}% | 
+                    Win Rate: ${analysis.hitRate.toFixed(1)}% | 
                     Current Streak: ${analysis.currentStreak.type} (${analysis.currentStreak.length}) | 
                     Volatility: ${analysis.volatility.toFixed(2)}
                 </div>
@@ -1024,6 +1447,116 @@
             }
         }
 
+        function generateNextMultiplier() {
+            // Generate a realistic multiplier
+            const newMultiplier = strategyPredictor.generateRealisticMultiplier();
+            
+            // Get current multipliers
+            const currentInput = document.getElementById('playerMultipliers').value;
+            const currentMultipliers = strategyPredictor.parsePlayerData(currentInput) || [];
+            
+            // Add new multiplier
+            currentMultipliers.push(newMultiplier);
+            document.getElementById('playerMultipliers').value = currentMultipliers.join(', ');
+            
+            // Update display
+            displayPlayerStats(currentMultipliers);
+            document.getElementById('playerMultipliersDisplay').classList.remove('hidden');
+            
+            // Add animation to the new multiplier
+            setTimeout(() => {
+                const container = document.getElementById('multiplierVisualization');
+                const lastMultiplier = container.lastElementChild;
+                if (lastMultiplier) {
+                    lastMultiplier.classList.add('new-multiplier');
+                }
+            }, 100);
+            
+            // Get crypto seeds
+            let serverSeed = document.getElementById('serverSeed').textContent;
+            let clientSeed = document.getElementById('clientSeed').textContent;
+            let nonce = parseInt(document.getElementById('nonce').textContent);
+            
+            // Generate seeds if they don't exist
+            if (!serverSeed || !clientSeed) {
+                serverSeed = strategyPredictor.generateServerSeed();
+                clientSeed = strategyPredictor.generateClientSeed();
+                document.getElementById('serverSeed').textContent = serverSeed;
+                document.getElementById('clientSeed').textContent = clientSeed;
+            }
+            
+            // Generate prediction for next round
+            const prediction = strategyPredictor.predictNextRound(currentMultipliers, serverSeed, clientSeed, nonce + 1);
+            showPredictionPopup(prediction);
+            
+            // Run full analysis
+            analyzeWithStrategy();
+            
+            // Increment nonce for next round
+            document.getElementById('nonce').textContent = nonce + 1;
+        }
+
+        function executeTrade(action) {
+            const popup = document.getElementById('predictionPopup');
+            const popupPrediction = document.getElementById('popupPrediction');
+            const popupConfidence = document.getElementById('popupConfidence');
+            
+            // Set prediction text
+            popupPrediction.textContent = action;
+            popupPrediction.className = action === "BUY" ? 
+                'text-5xl font-black mb-4 bullish' : 
+                action === "SELL" ?
+                'text-5xl font-black mb-4 bearish' :
+                'text-5xl font-black mb-4 signal';
+            
+            // Set confidence text
+            popupConfidence.textContent = `Trade executed: ${action} position`;
+            
+            // Show popup
+            popup.classList.add('show');
+            
+            // Hide popup after 2 seconds
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 2000);
+            
+            // Update order book
+            updateOrderBook(action);
+        }
+        
+        function updateOrderBook(action) {
+            const buyOrders = document.getElementById('buyOrders');
+            const sellOrders = document.getElementById('sellOrders');
+            
+            if (action === "BUY") {
+                // Add a new buy order
+                const newOrder = document.createElement('div');
+                newOrder.className = 'order-item';
+                const price = (2.0 + Math.random() * 2).toFixed(2);
+                const amount = (50 + Math.random() * 200).toFixed(2);
+                newOrder.innerHTML = `<span>${price}x</span><span>$${amount}</span>`;
+                buyOrders.insertBefore(newOrder, buyOrders.firstChild);
+                
+                // Remove last order if too many
+                if (buyOrders.children.length > 3) {
+                    buyOrders.removeChild(buyOrders.lastChild);
+                }
+            } else if (action === "SELL") {
+                // Add a new sell order
+                const newOrder = document.createElement('div');
+                newOrder.className = 'order-item';
+                const price = (1.0 + Math.random()).toFixed(2);
+                const amount = (50 + Math.random() * 200).toFixed(2);
+                newOrder.innerHTML = `<span>${price}x</span><span>$${amount}</span>`;
+                sellOrders.insertBefore(newOrder, sellOrders.firstChild);
+                
+                // Remove last order if too many
+                if (sellOrders.children.length > 3) {
+                    sellOrders.removeChild(sellOrders.lastChild);
+                }
+            }
+        }
+
         function showPredictionPopup(prediction) {
             const popup = document.getElementById('predictionPopup');
             const popupPrediction = document.getElementById('popupPrediction');
@@ -1031,9 +1564,11 @@
             
             // Set prediction text
             popupPrediction.textContent = prediction.final.prediction;
-            popupPrediction.className = prediction.final.prediction === ">2x" ? 
-                'text-5xl font-black mb-4 crypto-text' : 
-                'text-5xl font-black mb-4 danger-text';
+            popupPrediction.className = prediction.final.prediction === "BUY" ? 
+                'text-5xl font-black mb-4 bullish' : 
+                prediction.final.prediction === "SELL" ?
+                'text-5xl font-black mb-4 bearish' :
+                'text-5xl font-black mb-4 signal';
             
             // Set confidence text
             popupConfidence.textContent = `Confidence: ${prediction.final.confidence}%`;
@@ -1057,6 +1592,9 @@
             
             // Generate sample data
             generateRealisticData();
+            
+            // Initialize trading chart
+            initTradingChart();
         };
     </script>
 </body>
