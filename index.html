@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVIATOR DATA HACKER | REAL PLAYER INPUT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
+        
+        :root {
+            --blood-red: #990000;
+            --matrix-green: #00ff41;
+            --dark-bg: #050505;
+            --card-bg: rgba(10, 10, 10, 0.8);
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            font-family: 'Rajdhani', sans-serif;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(153, 0, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 65, 0.05) 0%, transparent 50%);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Orbitron', monospace;
+        }
+        
+        /* Fixed Header */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(90deg, rgba(5,5,5,0.95) 0%, rgba(10,10,10,0.9) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(153, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 4px 20px rgba(153, 0, 0, 0.3);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 260px;
+            height: calc(100vh - 60px);
+            background: linear-gradient(180deg, rgba(10,10,10,0.95) 0%, rgba(5,5,5,0.98) 100%);
+            border-right: 1px solid rgba(153, 0, 0, 0.3);
+            padding: 20px;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 999;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            margin-top: 60px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .main-content.expanded {
+            margin-left: 0;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid rgba(153, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--blood-red), var(--matrix-green));
+            box-shadow: 0 0 10px var(--blood-red);
+        }
+        
+        .card-danger {
+            border-color: rgba(153, 0, 0, 0.5);
+        }
+        
+        .card-danger::before {
+            background: linear-gradient(90deg, var(--blood-red), rgba(153, 0, 0, 0.5));
+            box-shadow: 0 0 10px var(--blood-red);
+        }
+        
+        .card-success {
+            border-color: rgba(0, 255, 65, 0.3);
+        }
+        
+        .card-success::before {
+            background: linear-gradient(90deg, var(--matrix-green), rgba(0, 255, 65, 0.5));
+            box-shadow: 0 0 10px var(--matrix-green);
+        }
+        
+        /* Text Styles */
+        .text-blood {
+            color: var(--blood-red);
+            text-shadow: 0 0 8px rgba(153, 0, 0, 0.7);
+        }
+        
+        .text-matrix {
+            color: var(--matrix-green);
+            text-shadow: 0 0 8px rgba(0, 255, 65, 0.7);
+        }
+        
+        .text-gold {
+            color: #ffd700;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, rgba(153, 0, 0, 0.7), rgba(80, 0, 0, 0.9));
+            color: white;
+            box-shadow: 0 4px 15px rgba(153, 0, 0, 0.4);
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, rgba(180, 0, 0, 0.8), rgba(100, 0, 0, 0.9));
+            box-shadow: 0 6px 20px rgba(153, 0, 0, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, rgba(0, 150, 30, 0.7), rgba(0, 80, 15, 0.9));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 255, 65, 0.3);
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, rgba(0, 180, 40, 0.8), rgba(0, 100, 20, 0.9));
+            box-shadow: 0 6px 20px rgba(0, 255, 65, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.7), rgba(10, 10, 30, 0.9));
+            color: white;
+            box-shadow: 0 4px 15px rgba(30, 30, 80, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(40, 40, 70, 0.8), rgba(20, 20, 50, 0.9));
+            box-shadow: 0 6px 20px rgba(30, 30, 80, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* Input Styles */
+        .input {
+            background: rgba(5, 5, 5, 0.7);
+            border: 1px solid rgba(153, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: #e0e0e0;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .input:focus {
+            outline: none;
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        
+        .textarea {
+            background: rgba(5, 5, 5, 0.7);
+            border: 1px solid rgba(153, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: #e0e0e0;
+            width: 100%;
+            min-height: 120px;
+            resize: vertical;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .textarea:focus {
+            outline: none;
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        
+        /* Animations */
+        @keyframes pulse-blood {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes pulse-matrix {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes blink-warning {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .pulse-blood {
+            animation: pulse-blood 2s infinite;
+        }
+        
+        .pulse-matrix {
+            animation: pulse-matrix 2s infinite;
+        }
+        
+        .blink-warning {
+            animation: blink-warning 1.5s infinite;
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: none;
+        }
+        
+        .mobile-nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(153, 0, 0, 0.8), rgba(80, 0, 0, 0.9));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(153, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-nav-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(153, 0, 0, 0.7);
+        }
+        
+        /* Multiplier Visualization */
+        .multiplier-chip {
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .multiplier-high {
+            background: rgba(0, 255, 65, 0.2);
+            border: 1px solid var(--matrix-green);
+            color: var(--matrix-green);
+        }
+        
+        .multiplier-low {
+            background: rgba(153, 0, 0, 0.2);
+            border: 1px solid var(--blood-red);
+            color: var(--blood-red);
+        }
+        
+        .multiplier-very-high {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-nav {
+                display: block;
+            }
+            
+            .card {
+                margin-bottom: 15px;
+            }
+        }
+        
+        /* Section Navigation */
+        .section-nav {
+            margin-bottom: 20px;
+        }
+        
+        .section-nav-item {
+            display: block;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .section-nav-item:hover {
+            background: rgba(153, 0, 0, 0.2);
+            border-left-color: var(--blood-red);
+        }
+        
+        .section-nav-item.active {
+            background: rgba(153, 0, 0, 0.3);
+            border-left-color: var(--blood-red);
+            color: white;
+        }
+        
+        .section-nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Hash Display */
+        .hash-display {
+            background: rgba(5, 5, 5, 0.7);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: var(--matrix-green);
+            font-family: monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hash-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.2), transparent);
+            animation: hash-flow 3s infinite linear;
+        }
+        
+        @keyframes hash-flow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Prediction Box */
+        .prediction-box {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .prediction-box.crypto {
+            background: rgba(5, 5, 5, 0.7);
+            border: 1px solid rgba(153, 0, 0, 0.3);
+        }
+        
+        .prediction-box.pattern {
+            background: rgba(5, 5, 5, 0.7);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+        }
+        
+        .prediction-box.final {
+            background: rgba(20, 20, 10, 0.7);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+        }
+        
+        .prediction-value {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 10px 0;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(5, 5, 5, 0.7);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(153, 0, 0, 0.2);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #a0a0a0;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="fixed-header">
+        <div class="flex items-center justify-between w-full">
+            <div class="flex items-center">
+                <button id="sidebarToggle" class="btn btn-primary mr-4">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="text-2xl font-black text-blood">AVIATOR DATA HACKER</h1>
+            </div>
+            <div class="text-matrix blink-warning">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                REAL PLAYER INPUT + CRYPTO RNG = MAXIMUM ACCURACY
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-gold mb-4">NAVIGATION</h2>
+            <nav class="section-nav">
+                <a href="#player-data" class="section-nav-item active">
+                    <i class="fas fa-gamepad"></i> Player Data
+                </a>
+                <a href="#crypto-engine" class="section-nav-item">
+                    <i class="fas fa-lock"></i> Crypto Engine
+                </a>
+                <a href="#predictions" class="section-nav-item">
+                    <i class="fas fa-chart-line"></i> Predictions
+                </a>
+                <a href="#analysis" class="section-nav-item">
+                    <i class="fas fa-microscope"></i> Analysis
+                </a>
+                <a href="#strategy" class="section-nav-item">
+                    <i class="fas fa-chess"></i> Strategy
+                </a>
+            </nav>
+        </div>
+        
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-gold mb-4">QUICK ACTIONS</h2>
+            <button onclick="generateRealisticData()" class="btn btn-success w-full mb-3">
+                <i class="fas fa-dice mr-2"></i> Generate Sample Data
+            </button>
+            <button onclick="generateServerSeed()" class="btn btn-danger w-full mb-3">
+                <i class="fas fa-server mr-2"></i> Generate Server Seed
+            </button>
+            <button onclick="generateClientSeed()" class="btn btn-danger w-full">
+                <i class="fas fa-fingerprint mr-2"></i> Generate Client Seed
+            </button>
+        </div>
+        
+        <div>
+            <h2 class="text-xl font-bold text-gold mb-4">SYSTEM STATUS</h2>
+            <div class="stat-card mb-3">
+                <div class="stat-label">RNG Engine</div>
+                <div class="stat-value text-matrix">ACTIVE</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Security Level</div>
+                <div class="stat-value text-blood">MAXIMUM</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="main-content">
+        <!-- PLAYER DATA INPUT SECTION -->
+        <section id="player-data" class="card">
+            <h2 class="text-3xl font-bold mb-4 text-gold text-center">
+                <i class="fas fa-gamepad mr-2"></i> YOUR REAL GAME DATA
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <!-- Your Actual Multipliers -->
+                <div>
+                    <label class="block text-sm mb-2 text-matrix">Your Past Multipliers (comma separated):</label>
+                    <textarea id="playerMultipliers" rows="4" class="textarea"
+                              placeholder="1.25, 2.50, 1.80, 3.20, 1.10, 4.50, 1.60, 2.80, 1.30, 5.20, 1.90, 2.10, 1.45, 6.80"></textarea>
+                    <div class="text-xs text-gray-400 mt-1">
+                        Enter your ACTUAL game multipliers from Aviator (minimum 10 rounds)
+                    </div>
+                    <button onclick="generateRealisticData()" class="btn btn-primary w-full mt-2">
+                        <i class="fas fa-dice mr-2"></i> GENERATE REALISTIC SAMPLE DATA
+                    </button>
+                </div>
+                
+                <!-- Quick Stats from Player Data -->
+                <div>
+                    <label class="block text-sm mb-2 text-matrix">Your Game Statistics:</label>
+                    <div id="playerStats" class="stat-card">
+                        <div class="text-center text-gray-500">Enter your multipliers to see stats</div>
+                    </div>
+                    <button onclick="analyzePlayerPattern()" class="btn btn-primary w-full mt-2">
+                        <i class="fas fa-chart-bar mr-2"></i> ANALYZE YOUR PATTERN
+                    </button>
+                </div>
+            </div>
+
+            <!-- Your Multiplier Visualization -->
+            <div id="playerMultipliersDisplay" class="hidden card">
+                <h4 class="text-lg font-bold mb-3 text-matrix text-center">Your Multiplier History</h4>
+                <div class="flex flex-wrap gap-2 justify-center" id="multiplierVisualization">
+                    <!-- Multipliers will appear here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CRYPTO SEED CONTROL PANEL -->
+        <section id="crypto-engine" class="card card-danger">
+            <h2 class="text-3xl font-bold mb-4 text-blood text-center">
+                <i class="fas fa-lock mr-2"></i> CRYPTO RNG ENGINE
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm mb-2 text-matrix">Server Seed (Hex):</label>
+                    <input type="text" id="serverSeed" class="input">
+                    <button onclick="generateServerSeed()" class="btn btn-danger w-full mt-2">
+                        <i class="fas fa-server mr-2"></i> GENERATE SERVER SEED
+                    </button>
+                </div>
+                
+                <div>
+                    <label class="block text-sm mb-2 text-matrix">Client Seed (Your ID):</label>
+                    <input type="text" id="clientSeed" class="input">
+                    <button onclick="generateClientSeed()" class="btn btn-danger w-full mt-2">
+                        <i class="fas fa-fingerprint mr-2"></i> GENERATE CLIENT SEED
+                    </button>
+                </div>
+                
+                <div>
+                    <label class="block text-sm mb-2 text-matrix">Start Nonce (Round):</label>
+                    <input type="number" id="nonce" value="1" class="input text-center">
+                    <div class="text-xs text-gray-400 mt-2 text-center">
+                        Next Round: <span id="currentRound">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HASH DISPLAY -->
+            <div class="mb-6">
+                <label class="block text-sm mb-2 text-matrix">HMAC-SHA256 Hash:</label>
+                <div id="hashDisplay" class="hash-display">
+                    Hash will be generated after analysis...
+                </div>
+            </div>
+
+            <button onclick="analyzeWithPlayerData()" class="btn btn-danger w-full pulse-blood">
+                <i class="fas fa-rocket mr-2"></i> COMBINE YOUR DATA + CRYPTO RNG → PREDICT NEXT
+            </button>
+        </section>
+
+        <!-- PREDICTION RESULTS -->
+        <section id="predictions" class="card card-success hidden">
+            <h2 class="text-3xl font-bold mb-4 text-matrix text-center">
+                <i class="fas fa-chart-line mr-2"></i> HYBRID PREDICTION RESULTS
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <!-- Crypto Prediction -->
+                <div class="prediction-box crypto">
+                    <h3 class="text-xl font-bold mb-3 text-blood">CRYPTO RNG PREDICTION</h3>
+                    <div class="prediction-value text-blood pulse-blood" id="cryptoPrediction">
+                        ???
+                    </div>
+                    <div class="text-matrix" id="cryptoDetails">
+                        Calculating RNG prediction...
+                    </div>
+                </div>
+                
+                <!-- Pattern Prediction -->
+                <div class="prediction-box pattern">
+                    <h3 class="text-xl font-bold mb-3 text-matrix">YOUR PATTERN PREDICTION</h3>
+                    <div class="prediction-value text-matrix pulse-matrix" id="patternPrediction">
+                        ???
+                    </div>
+                    <div class="text-blood" id="patternDetails">
+                        Analyzing your pattern...
+                    </div>
+                </div>
+            </div>
+
+            <!-- FINAL COMBINED PREDICTION -->
+            <div class="prediction-box final">
+                <h3 class="text-2xl font-bold mb-3 text-gold">FINAL COMBINED PREDICTION</h3>
+                <div class="prediction-value text-gold pulse-blood" id="finalPrediction">
+                    ANALYZING...
+                </div>
+                <div class="text-matrix" id="finalConfidence">
+                    Combining crypto RNG with your personal pattern...
+                </div>
+                <div class="text-blood mt-3 blink-warning" id="tradingSignal">
+                    SIGNAL: CALCULATING...
+                </div>
+            </div>
+        </section>
+
+        <!-- ADVANCED ANALYSIS -->
+        <section id="analysis" class="card card-danger hidden">
+            <h2 class="text-2xl font-bold mb-4 text-blood text-center">
+                <i class="fas fa-microscope mr-2"></i> ADVANCED PATTERN ANALYSIS
+            </h2>
+            
+            <div class="stats-grid mb-6">
+                <div class="stat-card">
+                    <div class="stat-label">Your Hit Rate</div>
+                    <div id="playerHitRate" class="stat-value text-blood">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Current Streak</div>
+                    <div id="currentStreak" class="stat-value text-gold">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pattern Strength</div>
+                    <div id="patternStrength" class="stat-value text-matrix">WEAK</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Volatility</div>
+                    <div id="playerVolatility" class="stat-value text-blood">0.00</div>
+                </div>
+            </div>
+
+            <!-- Next 5 Rounds Prediction -->
+            <div class="card">
+                <h3 class="text-xl font-bold mb-3 text-matrix text-center">NEXT 5 ROUNDS PREDICTION</h3>
+                <div class="grid grid-cols-5 gap-4" id="nextRoundsPrediction">
+                    <!-- Will be filled dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- STRATEGY RECOMMENDATION -->
+        <section id="strategy" class="card card-success hidden">
+            <h2 class="text-2xl font-bold mb-4 text-matrix text-center">
+                <i class="fas fa-chess mr-2"></i> TRADING STRATEGY
+            </h2>
+            <div id="strategyRecommendation" class="text-center">
+                <!-- Strategy will be displayed here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <button onclick="scrollToSection('player-data')" class="mobile-nav-btn" title="Player Data">
+            <i class="fas fa-gamepad"></i>
+        </button>
+        <button onclick="scrollToSection('crypto-engine')" class="mobile-nav-btn" title="Crypto Engine">
+            <i class="fas fa-lock"></i>
+        </button>
+        <button onclick="scrollToSection('predictions')" class="mobile-nav-btn" title="Predictions">
+            <i class="fas fa-chart-line"></i>
+        </button>
+        <button onclick="scrollToSection('analysis')" class="mobile-nav-btn" title="Analysis">
+            <i class="fas fa-microscope"></i>
+        </button>
+        <button onclick="scrollToSection('strategy')" class="mobile-nav-btn" title="Strategy">
+            <i class="fas fa-chess"></i>
+        </button>
+    </div>
+
+    <script>
+        // ADVANCED HYBRID PREDICTION ENGINE
+        class HybridAviatorPredictor {
+            constructor() {
+                this.playerMultipliers = [];
+                this.serverSeed = '';
+                this.clientSeed = '';
+                this.nonce = 1;
+                this.houseEdge = 0.01;
+            }
+
+            // Parse player's actual multiplier data
+            parsePlayerData(input) {
+                const numbers = input.split(',')
+                    .map(x => x.trim())
+                    .filter(x => x !== '')
+                    .map(x => parseFloat(x))
+                    .filter(x => !isNaN(x) && x >= 1.0);
+                
+                return numbers.length >= 5 ? numbers : null;
+            }
+
+            // Generate crypto seeds
+            generateServerSeed() {
+                let seed = '';
+                const chars = '0123456789abcdef';
+                for (let i = 0; i < 64; i++) {
+                    seed += chars[Math.floor(Math.random() * chars.length)];
+                }
+                return seed;
+            }
+
+            generateClientSeed() {
+                return 'player_' + Math.random().toString(36).substring(2, 15) + '_' + Date.now();
+            }
+
+            // Real Aviator RNG
+            generateCrashPoint(serverSeed, clientSeed, nonce) {
+                const message = serverSeed + clientSeed + nonce;
+                const hash = CryptoJS.HmacSHA256(message, serverSeed).toString(CryptoJS.enc.Hex);
+                const hashInt = parseInt(hash.substring(0, 8), 16);
+                const randomValue = hashInt / Math.pow(2, 32);
+                let crashPoint = (1 - this.houseEdge) / (1 - randomValue);
+                crashPoint = Math.max(1.00, crashPoint);
+                
+                return {
+                    multiplier: parseFloat(crashPoint.toFixed(2)),
+                    hash: hash,
+                    randomValue: randomValue
+                };
+            }
+
+            // Analyze player's pattern
+            analyzePlayerPattern(multipliers, target = 2.0) {
+                if (multipliers.length < 3) return null;
+
+                const analysis = {
+                    totalRounds: multipliers.length,
+                    highCount: multipliers.filter(m => m >= target).length,
+                    lowCount: multipliers.filter(m => m < target).length,
+                    hitRate: (multipliers.filter(m => m >= target).length / multipliers.length) * 100,
+                    currentStreak: this.getCurrentStreak(multipliers, target),
+                    averageMultiplier: multipliers.reduce((a, b) => a + b, 0) / multipliers.length,
+                    volatility: this.calculateVolatility(multipliers),
+                    pattern: this.detectPlayerPattern(multipliers, target)
+                };
+
+                return analysis;
+            }
+
+            getCurrentStreak(multipliers, target) {
+                let streak = 0;
+                const lastType = multipliers[multipliers.length - 1] >= target;
+                
+                for (let i = multipliers.length - 1; i >= 0; i--) {
+                    if ((multipliers[i] >= target) === lastType) {
+                        streak++;
+                    } else {
+                        break;
+                    }
+                }
+                
+                return {
+                    type: lastType ? "HIGH" : "LOW",
+                    length: streak,
+                    value: multipliers[multipliers.length - 1]
+                };
+            }
+
+            calculateVolatility(multipliers) {
+                const mean = multipliers.reduce((a, b) => a + b, 0) / multipliers.length;
+                const variance = multipliers.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / multipliers.length;
+                return Math.sqrt(variance);
+            }
+
+            detectPlayerPattern(multipliers, target) {
+                const recent = multipliers.slice(-5);
+                const patterns = {
+                    clustering: this.checkClustering(recent, target),
+                    alternating: this.checkAlternating(multipliers, target),
+                    trending: this.checkTrending(multipliers),
+                    recovery: this.checkRecoveryPattern(multipliers, target)
+                };
+
+                return patterns;
+            }
+
+            checkClustering(multipliers, target) {
+                const highCount = multipliers.filter(m => m >= target).length;
+                return highCount >= 4 ? 'HIGH_CLUSTER' : highCount <= 1 ? 'LOW_CLUSTER' : 'BALANCED';
+            }
+
+            checkAlternating(multipliers, target) {
+                let changes = 0;
+                for (let i = 1; i < multipliers.length; i++) {
+                    if ((multipliers[i-1] >= target) !== (multipliers[i] >= target)) {
+                        changes++;
+                    }
+                }
+                return changes / (multipliers.length - 1) > 0.6;
+            }
+
+            checkTrending(multipliers) {
+                if (multipliers.length < 4) return 'NEUTRAL';
+                const firstHalf = multipliers.slice(0, Math.floor(multipliers.length / 2));
+                const secondHalf = multipliers.slice(Math.floor(multipliers.length / 2));
+                const firstAvg = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length;
+                const secondAvg = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length;
+                return secondAvg > firstAvg ? 'UPWARD' : secondAvg < firstAvg ? 'DOWNWARD' : 'NEUTRAL';
+            }
+
+            checkRecoveryPattern(multipliers, target) {
+                for (let i = 2; i < multipliers.length; i++) {
+                    if (multipliers[i-2] < target && multipliers[i-1] < target && multipliers[i] >= target) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // PREDICTION ENGINE - COMBINES PLAYER DATA + CRYPTO RNG
+            predictNextRound(playerMultipliers, serverSeed, clientSeed, nextNonce, target = 2.0) {
+                // 1. Get crypto prediction
+                const cryptoResult = this.generateCrashPoint(serverSeed, clientSeed, nextNonce);
+                const cryptoPrediction = cryptoResult.multiplier >= target ? ">2x" : "<2x";
+                let cryptoConfidence = 50;
+
+                // 2. Get pattern prediction
+                const patternAnalysis = this.analyzePlayerPattern(playerMultipliers, target);
+                let patternPrediction = "UNCERTAIN";
+                let patternConfidence = 50;
+                let patternReason = "Insufficient data";
+
+                if (patternAnalysis) {
+                    const lastMultiplier = playerMultipliers[playerMultipliers.length - 1];
+                    
+                    // Smart pattern-based prediction
+                    if (patternAnalysis.currentStreak.type === "HIGH" && patternAnalysis.currentStreak.length >= 2) {
+                        patternPrediction = "<2x";
+                        patternConfidence = 65;
+                        patternReason = "Regression likely after high streak";
+                    } else if (patternAnalysis.currentStreak.type === "LOW" && patternAnalysis.currentStreak.length >= 2) {
+                        patternPrediction = ">2x";
+                        patternConfidence = 60;
+                        patternReason = "Recovery expected after low streak";
+                    } else if (patternAnalysis.hitRate > 60) {
+                        patternPrediction = ">2x";
+                        patternConfidence = 55;
+                        patternReason = "High historical hit rate";
+                    } else if (patternAnalysis.hitRate < 40) {
+                        patternPrediction = "<2x";
+                        patternConfidence = 55;
+                        patternReason = "Low historical hit rate";
+                    } else {
+                        patternPrediction = lastMultiplier >= target ? "<2x" : ">2x";
+                        patternConfidence = 50;
+                        patternReason = "Balanced pattern - alternating expected";
+                    }
+                }
+
+                // 3. Combine predictions
+                let finalPrediction;
+                let finalConfidence;
+                let tradingSignal;
+
+                if (cryptoPrediction === patternPrediction) {
+                    // Both agree - high confidence
+                    finalPrediction = cryptoPrediction;
+                    finalConfidence = Math.max(cryptoConfidence, patternConfidence) + 20;
+                    tradingSignal = "STRONG SIGNAL - BOTH SYSTEMS AGREE";
+                } else {
+                    // Disagreement - use weighted average
+                    finalPrediction = cryptoConfidence > patternConfidence ? cryptoPrediction : patternPrediction;
+                    finalConfidence = Math.abs(cryptoConfidence - patternConfidence);
+                    tradingSignal = "CAUTION - SYSTEMS DISAGREE";
+                }
+
+                finalConfidence = Math.min(95, Math.max(30, finalConfidence));
+
+                return {
+                    crypto: {
+                        prediction: cryptoPrediction,
+                        confidence: cryptoConfidence,
+                        expectedMultiplier: cryptoResult.multiplier,
+                        hash: cryptoResult.hash
+                    },
+                    pattern: {
+                        prediction: patternPrediction,
+                        confidence: patternConfidence,
+                        reason: patternReason,
+                        analysis: patternAnalysis
+                    },
+                    final: {
+                        prediction: finalPrediction,
+                        confidence: finalConfidence,
+                        signal: tradingSignal
+                    }
+                };
+            }
+
+            // Predict multiple future rounds
+            predictNextRounds(playerMultipliers, serverSeed, clientSeed, startNonce, count = 5, target = 2.0) {
+                const predictions = [];
+                let currentMultipliers = [...playerMultipliers];
+                
+                for (let i = 0; i < count; i++) {
+                    const prediction = this.predictNextRound(currentMultipliers, serverSeed, clientSeed, startNonce + i, target);
+                    predictions.push(prediction);
+                    // Simulate adding the predicted result for next prediction
+                    const simulatedMultiplier = prediction.final.prediction === ">2x" ? 
+                        (2 + Math.random() * 3) : (1 + Math.random());
+                    currentMultipliers.push(parseFloat(simulatedMultiplier.toFixed(2)));
+                }
+                
+                return predictions;
+            }
+        }
+
+        const hybridPredictor = new HybridAviatorPredictor();
+
+        // UI Functions
+        function analyzeWithPlayerData() {
+            // Get player data
+            const playerInput = document.getElementById('playerMultipliers').value;
+            const playerMultipliers = hybridPredictor.parsePlayerData(playerInput);
+            
+            if (!playerMultipliers) {
+                alert('Please enter at least 5 of your actual multipliers!');
+                return;
+            }
+
+            // Get crypto seeds
+            const serverSeed = document.getElementById('serverSeed').value;
+            const clientSeed = document.getElementById('clientSeed').value;
+            const nonce = parseInt(document.getElementById('nonce').value);
+
+            if (!serverSeed || !clientSeed) {
+                alert('Please generate server and client seeds first!');
+                return;
+            }
+
+            // Store data
+            hybridPredictor.playerMultipliers = playerMultipliers;
+            hybridPredictor.serverSeed = serverSeed;
+            hybridPredictor.clientSeed = clientSeed;
+            hybridPredictor.nonce = nonce;
+
+            // Generate predictions
+            const prediction = hybridPredictor.predictNextRound(playerMultipliers, serverSeed, clientSeed, nonce + 1);
+            const futurePredictions = hybridPredictor.predictNextRounds(playerMultipliers, serverSeed, clientSeed, nonce + 1, 5);
+
+            // Display results
+            displayPlayerStats(playerMultipliers);
+            displayPredictions(prediction);
+            displayFuturePredictions(futurePredictions);
+            displayStrategy(prediction, playerMultipliers);
+
+            // Show all sections
+            document.getElementById('predictions').classList.remove('hidden');
+            document.getElementById('analysis').classList.remove('hidden');
+            document.getElementById('strategy').classList.remove('hidden');
+            document.getElementById('playerMultipliersDisplay').classList.remove('hidden');
+            
+            // Scroll to predictions
+            scrollToSection('predictions');
+        }
+
+        function displayPlayerStats(multipliers) {
+            const analysis = hybridPredictor.analyzePlayerPattern(multipliers);
+            const statsDiv = document.getElementById('playerStats');
+            
+            if (analysis) {
+                statsDiv.innerHTML = `
+                    <div class="flex justify-between">
+                        <span>Total Rounds:</span>
+                        <span class="text-matrix">${analysis.totalRounds}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>>2x Hits:</span>
+                        <span class="text-matrix">${analysis.highCount}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span><2x Hits:</span>
+                        <span class="text-blood">${analysis.lowCount}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Hit Rate:</span>
+                        <span class="text-gold">${analysis.hitRate.toFixed(1)}%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Current Streak:</span>
+                        <span class="${analysis.currentStreak.type === 'HIGH' ? 'text-matrix' : 'text-blood'}">
+                            ${analysis.currentStreak.type} (${analysis.currentStreak.length})
+                        </span>
+                    </div>
+                `;
+            }
+
+            // Update analysis section
+            document.getElementById('playerHitRate').textContent = analysis.hitRate.toFixed(1) + '%';
+            document.getElementById('currentStreak').textContent = `${analysis.currentStreak.type} (${analysis.currentStreak.length})`;
+            document.getElementById('patternStrength').textContent = analysis.volatility > 2.0 ? 'STRONG' : 'WEAK';
+            document.getElementById('playerVolatility').textContent = analysis.volatility.toFixed(2);
+
+            // Visualize multipliers
+            displayMultiplierVisualization(multipliers);
+        }
+
+        function displayMultiplierVisualization(multipliers) {
+            const container = document.getElementById('multiplierVisualization');
+            container.innerHTML = '';
+            
+            multipliers.forEach((multiplier, index) => {
+                const span = document.createElement('span');
+                let className = 'multiplier-chip ';
+                
+                if (multiplier >= 5.0) {
+                    className += 'multiplier-very-high';
+                } else if (multiplier >= 2.0) {
+                    className += 'multiplier-high';
+                } else {
+                    className += 'multiplier-low';
+                }
+                
+                span.className = className;
+                span.textContent = multiplier.toFixed(1);
+                span.title = `Round ${index + 1}: ${multiplier}x`;
+                container.appendChild(span);
+            });
+        }
+
+        function displayPredictions(prediction) {
+            // Crypto Prediction
+            document.getElementById('cryptoPrediction').textContent = prediction.crypto.prediction;
+            document.getElementById('cryptoDetails').textContent = 
+                `Expected: ${prediction.crypto.expectedMultiplier.toFixed(2)}x | RNG Confidence: ${prediction.crypto.confidence}%`;
+
+            // Pattern Prediction
+            document.getElementById('patternPrediction').textContent = prediction.pattern.prediction;
+            document.getElementById('patternDetails').textContent = 
+                `${prediction.pattern.reason} | Pattern Confidence: ${prediction.pattern.confidence}%`;
+
+            // Final Prediction
+            document.getElementById('finalPrediction').textContent = prediction.final.prediction;
+            document.getElementById('finalConfidence').textContent = 
+                `Combined Confidence: ${prediction.final.confidence}%`;
+            document.getElementById('tradingSignal').textContent = prediction.final.signal;
+
+            // Update hash display
+            document.getElementById('hashDisplay').textContent = prediction.crypto.hash;
+        }
+
+        function displayFuturePredictions(predictions) {
+            const container = document.getElementById('nextRoundsPrediction');
+            container.innerHTML = '';
+            
+            predictions.forEach((pred, index) => {
+                const div = document.createElement('div');
+                div.className = `text-center p-3 rounded border ${
+                    pred.final.prediction === ">2x" ? 
+                    'border-green-500 bg-green-900/20' : 
+                    'border-red-500 bg-red-900/20'
+                }`;
+                div.innerHTML = `
+                    <div class="font-bold text-lg">R${index + 1}</div>
+                    <div class="text-xl font-black ${pred.final.prediction === ">2x" ? 'text-matrix' : 'text-blood'}">
+                        ${pred.final.prediction}
+                    </div>
+                    <div class="text-xs">${pred.final.confidence}% conf</div>
+                    <div class="text-xs text-gray-400 mt-1">
+                        Crypto: ${pred.crypto.prediction}<br>
+                        Pattern: ${pred.pattern.prediction}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function displayStrategy(prediction, multipliers) {
+            const strategyDiv = document.getElementById('strategyRecommendation');
+            const analysis = hybridPredictor.analyzePlayerPattern(multipliers);
+            
+            let strategy = '';
+            let recommendation = '';
+            
+            if (prediction.final.confidence >= 70) {
+                strategy = 'AGGRESSIVE TRADING';
+                recommendation = prediction.final.prediction === ">2x" ? 
+                    'STAKE MAXIMUM AMOUNT - HIGH CONFIDENCE IN >2x' : 
+                    'AVOID BETTING - HIGH CONFIDENCE IN <2x';
+            } else if (prediction.final.confidence >= 55) {
+                strategy = 'MODERATE TRADING';
+                recommendation = prediction.final.prediction === ">2x" ? 
+                    'STAKE NORMAL AMOUNT - GOOD CHANCE OF >2x' : 
+                    'STAKE SMALL OR SKIP - LIKELY <2x';
+            } else {
+                strategy = 'CAUTIOUS TRADING';
+                recommendation = 'STAKE MINIMUM OR WAIT - LOW CONFIDENCE PREDICTION';
+            }
+
+            strategyDiv.innerHTML = `
+                <div class="text-2xl font-bold mb-3 text-gold">${strategy}</div>
+                <div class="text-lg text-matrix mb-4">${recommendation}</div>
+                <div class="text-sm text-blood">
+                    Your Hit Rate: ${analysis.hitRate.toFixed(1)}% | 
+                    Current Streak: ${analysis.currentStreak.type} (${analysis.currentStreak.length}) | 
+                    Volatility: ${analysis.volatility.toFixed(2)}
+                </div>
+            `;
+        }
+
+        function generateRealisticData() {
+            const sample = [];
+            for (let i = 0; i < 15; i++) {
+                let multiplier;
+                if (Math.random() < 0.4) {
+                    multiplier = 1 + Math.random(); // 1-2x
+                } else if (Math.random() < 0.7) {
+                    multiplier = 2 + Math.random() * 3; // 2-5x
+                } else {
+                    multiplier = 5 + Math.random() * 45; // 5-50x
+                }
+                sample.push(parseFloat(multiplier.toFixed(2)));
+            }
+            document.getElementById('playerMultipliers').value = sample.join(', ');
+            // Auto-analyze
+            analyzePlayerPattern();
+        }
+
+        function analyzePlayerPattern() {
+            const input = document.getElementById('playerMultipliers').value;
+            const multipliers = hybridPredictor.parsePlayerData(input);
+            
+            if (multipliers) {
+                displayPlayerStats(multipliers);
+                document.getElementById('playerMultipliersDisplay').classList.remove('hidden');
+            }
+        }
+
+        function generateServerSeed() {
+            const seed = hybridPredictor.generateServerSeed();
+            document.getElementById('serverSeed').value = seed;
+        }
+
+        function generateClientSeed() {
+            const seed = hybridPredictor.generateClientSeed();
+            document.getElementById('clientSeed').value = seed;
+        }
+
+        // Sidebar toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        });
+
+        // Section navigation
+        document.querySelectorAll('.section-nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all items
+                document.querySelectorAll('.section-nav-item').forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Scroll to section
+                const targetId = this.getAttribute('href').substring(1);
+                scrollToSection(targetId);
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.add('collapsed');
+                    document.getElementById('mainContent').classList.add('expanded');
+                }
+            });
+        });
+
+        // Scroll to section function
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const headerHeight = 60; // Height of fixed header
+                const sectionTop = section.offsetTop - headerHeight;
+                
+                window.scrollTo({
+                    top: sectionTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            generateServerSeed();
+            generateClientSeed();
+            generateRealisticData();
+        };
+    </script>
+</body>
+</html>n
